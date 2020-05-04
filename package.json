@@ -1,0 +1,23 @@
+{
+  "name": "back-it-up",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "start": "node src/app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Samb8104/Back-It-Up.git"
+  },
+  "author": "Samb8104",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Samb8104/Back-It-Up/issues"
+  },
+  "homepage": "https://github.com/Samb8104/Back-It-Up#readme",
+  "dependencies": {
+    "async": "^3.2.0",
+    "rfr": "^1.2.3"
+  }
+}
