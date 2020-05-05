@@ -3,17 +3,16 @@
 Back-It-Up Entry file checks program validity and begins the application
 
 */
-const rfr = require("rfr");
 const async = require("async");
-
-const Config = rfr("src/helpers/config.js");
+const Config = require("./helpers/config.js");
 
 //Initialisation
 async.auto({
-    //Check the config file is present
-    config_read: (callback) => {
+    
+    //Check config file is present
+    config_read: (callback) => {                            
         Config.read()
-            .then((result) => { callback(null, result.config) },
+        .then((result) => { callback(null, result.config) },
                    (error) => { callback(error) })
     }
 
