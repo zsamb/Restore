@@ -10,14 +10,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Samb8104/Back-It-Up.git"
+    "url": "git+https://github.com/TeamCoeus/Restore.git"
   },
   "author": "Samb8104",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/Samb8104/Back-It-Up/issues"
+    "url": "https://github.com/TeamCoeus/Restore/issues"
   },
-  "homepage": "https://github.com/Samb8104/Back-It-Up#readme",
+  "homepage": "https://github.com/TeamCoeus/Restore#readme",
   "dependencies": {
     "async": "^3.2.0",
     "moment": "^2.26.0"
