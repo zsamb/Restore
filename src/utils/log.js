@@ -15,7 +15,7 @@ class Log {
     new(type, message, options) {
         return new Promise((resolve , reject) => {
 
-            this.options         = options || {};
+            this.options = options || {};
 
             if (type == "system" || type == "backup") {
                 if (this.options.fileOnly) {                                    //File only
@@ -57,7 +57,7 @@ class Log {
     //Async write log to console stream
     _toConsole(type, message, options) {
         return new Promise((resolve, reject) => {
-            this.dataTimestamp   = `[ ${moment().format("hh:mm:ss")} ]`;
+            this.dataTimestamp = `[ ${moment().format("hh:mm:ss")} ]`;
             try {
                 process.stdout.write(Buffer.from(`[ ${options.error ? "ERROR" : "INFO"} ] ${this.dataTimestamp} ${type.toUpperCase()}: ${message}\n`));
                 resolve("Log created to console")

@@ -4,8 +4,10 @@ Back-It-Up Entry file checks program validity and begins the application
 
 */
 const async = require("async");
-const Config = require("./utils/config.js");
+const conf = require("./utils/config.js");
 const logger = require("./utils/log.js");
+
+const Config = new conf();
 const Log = new logger();
 
 Log.new("backup", "boink", {error: true});
