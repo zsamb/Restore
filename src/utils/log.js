@@ -1,6 +1,6 @@
 /*
 
-Handles logging to terminal and file with specific select modes
+Handles logging to terminal and file with specific modes
 
 */
 const fs = require("fs");
