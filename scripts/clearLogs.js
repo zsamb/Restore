@@ -3,15 +3,13 @@
 Clear application logs script
 
 */
-const util = require('util');
 const fs = require('fs');
 
-const readdir = util.promisify(fs.readdir);
 const locations = ["backup", "system"];
 const path = "./logs/"
 
 locations.forEach(loc => {
-    readdir(`${path}${loc}`)
+    fs.promises.readdir(`${path}${loc}`)
     .then(files => {
         files.forEach(file => {
             if (file.split(".")[1] == "log") {
