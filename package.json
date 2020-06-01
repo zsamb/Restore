@@ -5,7 +5,8 @@
   "main": "app.js",
   "scripts": {
     "start": "node src/app.js",
-    "clearlogs": "node scripts/clearLogs.js"
+    "clearlogs": "node scripts/clearLogs.js",
+    "setup": "npm i"
   },
   "repository": {
     "type": "git",
