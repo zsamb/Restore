@@ -8,9 +8,32 @@ const moment = require("moment");
 
 class Log {
 
+    constructor() {
+        this.colours = {
+
+            FgBlack:   "\x1b[30m",
+            FgRed:     "\x1b[31m",
+            FgGreen:   "\x1b[32m",
+            FgYellow:  "\x1b[33m",
+            FgBlue:    "\x1b[34m",
+            FgMagenta: "\x1b[35m",
+            FgCyan:    "\x1b[36m",
+            FgWhite:   "\x1b[37m",
+            BgBlack:   "\x1b[40m",
+            BgRed:     "\x1b[41m",
+            BgGreen:   "\x1b[42m",
+            BgYellow:  "\x1b[43m",
+            BgBlue:    "\x1b[44m",
+            BgMagenta: "\x1b[45m",
+            BgCyan:    "\x1b[46m",
+            BgWhite:   "\x1b[47m"
+
+        }
+    }
+
     /*
         Log creation
-        Parameters: type, message and options object {fileOnly:bool, consoleOnly:bool, error:bool}
+        Parameters: type, message and options object {fileOnly:bool, consoleOnly:bool, error:bool, color:key}
     */
     new(type, message, options) {
         return new Promise((resolve , reject) => {
@@ -59,7 +82,7 @@ class Log {
         return new Promise((resolve, reject) => {
             this.dataTimestamp = `[ ${moment().format("hh:mm:ss")} ]`;
             try {
-                process.stdout.write(Buffer.from(`[ ${options.error ? "ERROR" : "INFO"} ] ${this.dataTimestamp} ${type.toUpperCase()}: ${message}\n`));
+                process.stdout.write(Buffer.from(`${options.colour ? (this.colours[options.colour] || "") : ""}[ ${options.error ? "ERROR" : "INFO"} ] ${this.dataTimestamp} ${type.toUpperCase()}: ${message}\x1b[0m\n`));
                 resolve("Log created to console")
             } catch (error) { reject(error.message) }
         })
