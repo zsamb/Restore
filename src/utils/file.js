@@ -25,7 +25,7 @@ class File {
                 }
             })
             if (this.count == this.paths.length) { resolve() }
-            else { reject() }
+            else { reject("Invalid log directory") }
         })
     }
 
