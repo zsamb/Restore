@@ -4,13 +4,15 @@ Back-It-Up Entry file checks program validity and begins the application
 
 */
 const async = require("async");
-const conf = require("./utils/config.js");
+const config = require("./utils/config.js");
 const logger = require("./utils/log.js");
+const file = require("./utils/file.js");
 
-const Config = new conf();
+const Config = new config();
 const Log = new logger();
+const File = new file();
 
-Log.new("backup", "boink", {error: true});
+Log.new("system", "test test test", {consoleOnly: true, colour: "FgRed"});
 
 //Initialisation
 async.auto({
@@ -19,9 +21,14 @@ async.auto({
     config_read: (callback) => {                            
         Config.read()
         .then((result) => { callback(null, result.config) },
-                   (error) => { callback(error) })
-    }
+               (error) => { callback(error) })
+    },
     //Validate logs directories
+    validate_logs: (callback) => {
+        File.verifyLogs(true)
+        .then(() => { callback(null) },
+         (error) => { callback(error) })
+    }
 
 }, (err, results) => {
     if (err) { console.error(`Failed to initialise:`, err) } 
