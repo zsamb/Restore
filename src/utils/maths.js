@@ -4,26 +4,22 @@ Math related utils
 
 */
 
-class Maths {
+//Generate a base64 string of specified length
+const generateID = (length) => {
+    return new Promise((resolve, reject) => { 
+        try {
 
-    //Generate a base64 string of specified length
-    generateID(length) {
-        return new Promise((resolve, reject) => { 
-            try {
-
-                this.chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890-_";
-                this.id = "";
-                this.rNums = [];
+            let chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890-_";
+            let id = "";
+            let rNums = [];
                 
-                for (let i=0; i <= length; i++) { this.rNums.push(Math.round(Math.random() * 64)) }
-                this.rNums.forEach((num) => { this.id += this.chars[num] })
+            for (let i=0; i <= length; i++) { rNums.push(Math.round(Math.random() * 64)) }
+            rNums.forEach((num) => { id += chars[num] })
 
-                resolve(this.id)
+            resolve(id)
 
-            } catch (error) { reject(error.message) }
-        })
-    }
-
+        } catch (error) { reject(error.message) }
+    })
 }
 
-module.exports = Maths;
+module.exports = { generateID }
