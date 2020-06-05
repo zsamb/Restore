@@ -20,6 +20,7 @@
   "homepage": "https://github.com/TeamCoeus/Restore#readme",
   "dependencies": {
     "async": "^3.2.0",
-    "moment": "^2.26.0"
+    "moment": "^2.26.0",
+    "mysql": "^2.18.1"
   }
 }
