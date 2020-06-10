@@ -9,6 +9,7 @@ const Config = require("./utils/config");
 const Log = require("./utils/log");
 const Init = require("./utils/init");
 const backup = require("./utils/backup");
+const SQL = require("./utils/sql");
 
 const Backup = new backup();
 
@@ -32,12 +33,19 @@ async.auto({
         Init.verifySQL()
         .then(() => { callback(null) },
          (error) => { callback(error) })
+    }],
+    sync_sql: ["validate_sql", (results, callback) => {
+        SQL.sync()
+        .then(() => { callback(null) },
+         (error) => { callback(error) })
     }]
 
 }, (err, results) => {
 
     if (err) { console.error(`Failed to initialise:`, err) } 
-    else { console.log(results) }
+    else { 
+        console.log(results);
+    }
 
 })
 
