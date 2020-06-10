@@ -38,6 +38,7 @@ const verifySQL = () => {
     return new Promise(async (resolve, reject) => {
 
         let config = await read();
+        delete config.config.pool;
         let connection = createConnection(config.config.sql);
         connection.connect((err) => {
             if (err) { reject(err.sqlMessage) } 

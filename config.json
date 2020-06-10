@@ -2,9 +2,10 @@
     "sql": {
         "host": "localhost",
         "port": 3306,
-        "database": "restore",
+        "database": "",
         "user": "root",
-        "password": "password",
-        "connectionLimit": 10
+        "password": "",
+        "connectionLimit": 10,
+        "pool": false
     }
 }
