@@ -34,7 +34,7 @@ const colours = {
 const send = (type, message, options) => {
     return new Promise((resolve , reject) => {
 
-        let Options = options || {};
+        let Options = options || new Object();
 
         if (type == "system" || type == "backup") {
             if (Options.fileOnly) {                                    //File only

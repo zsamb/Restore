@@ -10,8 +10,8 @@ const generateID = (length) => {
         try {
 
             let chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890-_";
-            let id = "";
-            let rNums = [];
+            let id = new String();
+            let rNums = new Array();
                 
             for (let i=0; i <= length; i++) { rNums.push(Math.round(Math.random() * 64)) }
             rNums.forEach((num) => { id += chars[num] })
