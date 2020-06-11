@@ -17,7 +17,7 @@ const sync = () => {
         
             let connection = createConnection(config.config.sql);
 
-            connection.query("CREATE TABLE IF NOT EXISTS `backups` ( `name` VARCHAR(255) NOT NULL, `type` VARCHAR(2) NOT NULL, `source` TINYTEXT NOT NULL, `target` TINYTEXT NOT NULL, `category` VARCHAR(255) NOT NULL, `id` VARCHAR(16) NOT NULL, `created` TIMESTAMP NOT NULL, `owner` VARCHAR(255) NOT NULL );", 
+            connection.query("CREATE TABLE IF NOT EXISTS `backups` ( `name` VARCHAR(255) NOT NULL, `type` VARCHAR(2) NOT NULL, `source` TINYTEXT NOT NULL, `target` TINYTEXT NOT NULL, `category` VARCHAR(255) NOT NULL, `id` VARCHAR(16) NOT NULL, `created` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, `owner` VARCHAR(255) NOT NULL );", 
             (error, results, fields) => {
                 if (error) { reject(error.message) }
                 else {
