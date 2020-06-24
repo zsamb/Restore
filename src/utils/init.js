@@ -30,26 +30,5 @@ const verifyLogs = (create) => {
 
 }
 
-const verifySQL = () => {
 
-    const { createConnection } = require("mysql");
-    const { read } = require("./config");
-
-    return new Promise(async (resolve, reject) => {
-
-        let config = await read();
-        delete config.config.pool;
-        let connection = createConnection(config.config.sql);
-        connection.connect((err) => {
-            if (err) { reject(err.sqlMessage) } 
-            else {
-                connection.end();
-                resolve();
-            }
-        })
-
-    })
-
-}
-
-module.exports = { verifyLogs, verifySQL }
+module.exports = { verifyLogs }

@@ -9,9 +9,6 @@ const Config = require("./utils/config");
 const Log = require("./utils/log");
 const Init = require("./utils/init");
 const backup = require("./utils/backup");
-const SQL = require("./utils/sql");
-
-const Backup = new backup();
 
 //Initialisation
 async.auto({
@@ -27,18 +24,7 @@ async.auto({
         Init.verifyLogs(true)
         .then(() => { callback(null) },
          (error) => { callback(error) })
-    },
-    //Check a connection to the database can be made
-    validate_sql: ["config_read", (results, callback) => {
-        Init.verifySQL()
-        .then(() => { callback(null) },
-         (error) => { callback(error) })
-    }],
-    sync_sql: ["validate_sql", (results, callback) => {
-        SQL.sync()
-        .then(() => { callback(null) },
-         (error) => { callback(error) })
-    }]
+    }
 
 }, (err, results) => {
 
@@ -48,5 +34,3 @@ async.auto({
     }
 
 })
-
-
