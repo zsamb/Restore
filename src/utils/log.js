@@ -107,7 +107,7 @@ const _toFile = (type, message, options) => {
 //Async write log to console stream
 const _toConsole = (type, message, options) => {
     return new Promise((resolve, reject) => {
-        let dataTimestamp = `[ ${moment().format("hh:mm:ss")} ]`;
+        let dataTimestamp = `[ ${moment().format("HH:mm:ss")} ]`;
         try {
             process.stdout.write(Buffer.from(`${options.colour ? (colours[options.colour] || "") : ""}[ ${options.error ? "ERROR" : "INFO"} ] ${dataTimestamp} ${type.toUpperCase()}: ${message}\x1b[0m\n`));
             resolve("Log created to console")
