@@ -3,40 +3,47 @@
 Back-It-Up Entry file checks program validity and begins the application
 
 */
-const async = require("async");
+const { auto } = require("async");
 
-const Config = require("./utils/config");
+const { read } = require("./utils/config");
 const Log = require("./utils/log");
 const Init = require("./utils/init");
-const backup = require("./utils/backup");
+
+let logsAvailable = false;
 
 //Initialisation
-async.auto({
+auto({
     
-    //Check config file is present
-    config_read: (callback) => {                            
-        Config.read()
-        .then((result) => callback(null, result.config),
-               (error) => callback([error]) )
-    },
     //Validate logs directories
     validate_logs: (callback) => {
         Init.verifyLogs(true)
-        .then(() => callback(null),
-         (error) => callback([error]) )
+        .then(() => {
+            Log.send("system", "Validated logs");
+            logsAvailable = true;
+            callback(null);
+        }, (error) => callback([error]) )
     },
+    //Check config file is present
+    config_read: ["validate_logs", (results, callback) => {       
+        Log.send("system", "Checking config file...");                     
+        read()
+        .then((result) => {
+            Log.send("system", "Config file is accessible");
+            callback(null, result.config);
+        }, (error) => callback([error]) );
+    }],
     //Validate mongodb credentials
     validate_mongo: ["validate_logs", "config_read", (results, callback) => {
         Init.verifyMongo()
         .then(() => callback(),
-         (error) => callback([error]) )
+         (error) => callback(error) );
 
     }]
-}, (err, results) => {
+}, (error, results) => {
 
-    if (err) { console.error(`Failed to initialise:`, err) } 
-    else { 
-        console.log(results);
-    }
+    //If there were errors in init log them and exit
+    if (error) { logsAvailable ? Log.sendMultiple("system", error, { error: true }) : console.error(`Failed to initialise: ${error[0]}`) } 
+    //Otherwise state the good init
+    else { Log.send("system", "Initialisation successful") }
 
 })
