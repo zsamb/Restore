@@ -60,6 +60,38 @@ const send = (type, message, options) => {
     })
 }
 
+//Log creation for multiple messages (same parameters as send)
+const sendMultiple = (type, messages, options) => {
+    return new Promise((resolve , reject) => {
+
+        let Options = options || new Object();
+
+        if (type == "system" || type == "backup") {
+            messages.forEach(message => {
+                if (Options.fileOnly) {                                    //File only
+                    _toFile(type, message, Options)
+                    .then((success) => { resolve() }, 
+                          (error)   => { reject()  })
+    
+                } else if (Options.consoleOnly) {                          //Console only
+                    _toConsole(type, message, Options)
+                    .then((success) => { resolve() },
+                          (error)   => { reject()  })
+    
+                } else {                                                   //Both
+                    _toConsole(type, message, Options)
+                    .then((success) => {
+                        _toFile(type, message, Options)
+                        .then((success) => {
+                            resolve()
+                        }, (error) => { reject("Failed to log to file") })
+                    }, (error) => { reject("Failed to log to console") })
+                }
+            })
+        } else { reject("Invalid log type") }
+    })
+}
+
 //Async append new log to file
 const _toFile = (type, message, options) => {
     return new Promise((resolve, reject) => {
@@ -83,4 +115,4 @@ const _toConsole = (type, message, options) => {
     })
 }
 
-module.exports = { send };
+module.exports = { send, sendMultiple };
