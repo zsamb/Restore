@@ -1,11 +1,9 @@
 {
-    "sql": {
-        "host": "localhost",
-        "port": 3306,
-        "database": "",
+    "mongo": {
+        "host": "mongo.samb8104.xyz",
+        "port": 27017,
+        "database": "restore",
         "user": "root",
-        "password": "",
-        "connectionLimit": 10,
-        "pool": false
+        "password": "4GjZh92sKuvSR6WxAG8EFfSE"
     }
 }
