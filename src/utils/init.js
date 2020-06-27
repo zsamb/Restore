@@ -54,9 +54,8 @@ const verifyMongo = () => {
                     useUnifiedTopology: true
                 }).then(() => {
 
-                    //Disconnect if good connection
-                    sendMultiple("system", ["Validated database credentials", "Disconnecting from MongoDB"]);
-                    mongoose.disconnect();
+                    //Resolve if good connection
+                    send("system", "Validated database credentials");
                     resolve();
 
                 }).catch(error => reject([error.message]));
