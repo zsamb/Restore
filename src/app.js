@@ -16,16 +16,22 @@ async.auto({
     //Check config file is present
     config_read: (callback) => {                            
         Config.read()
-        .then((result) => { callback(null, result.config) },
-               (error) => { callback(error) })
+        .then((result) => callback(null, result.config),
+               (error) => callback([error]) )
     },
     //Validate logs directories
     validate_logs: (callback) => {
         Init.verifyLogs(true)
-        .then(() => { callback(null) },
-         (error) => { callback(error) })
-    }
+        .then(() => callback(null),
+         (error) => callback([error]) )
+    },
+    //Validate mongodb credentials
+    validate_mongo: ["validate_logs", "config_read", (results, callback) => {
+        Init.verifyMongo()
+        .then(() => callback(),
+         (error) => callback([error]) )
 
+    }]
 }, (err, results) => {
 
     if (err) { console.error(`Failed to initialise:`, err) } 
