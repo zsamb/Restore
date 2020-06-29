@@ -42,8 +42,10 @@ auto({
 }, (error, results) => {
 
     //If there were errors in init log them and exit
-    if (error) { logsAvailable ? Log.sendMultiple("system", error, { error: true }) : console.error(`Failed to initialise: ${error[0]}`) } 
+    if (error) { logsAvailable ? Log.sendMultiple("system", error, { error: true, colour: "FgRed" }) : console.error(`Failed to initialise: ${error[0]}`) } 
     //Otherwise state the good init
-    else { Log.send("system", "Initialisation successful") }
+    else { 
+        Log.send("system", "Initialisation successful") 
+    }
 
 })

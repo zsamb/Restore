@@ -29,7 +29,7 @@ const colours = {
 
 /*
     Log creation
-    Parameters: type, message and options object {fileOnly:bool, consoleOnly:bool, error:bool, color:key}
+    Parameters: type, message and options object {fileOnly:bool, consoleOnly:bool, error:bool, colour:key}
 */
 const send = (type, message, options) => {
     return new Promise((resolve , reject) => {

@@ -1,9 +1,9 @@
 {
     "mongo": {
-        "host": "mongo.samb8104.xyz",
+        "host": "",
         "port": 27017,
-        "database": "restore",
-        "user": "root",
-        "password": "4GjZh92sKuvSR6WxAG8EFfSE"
+        "database": "",
+        "user": "",
+        "password": ""
     }
 }

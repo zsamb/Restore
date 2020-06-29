@@ -45,7 +45,7 @@ const verifyMongo = () => {
             checkConfig(data.config.mongo).then(() => {
 
                 let mongo = data.config.mongo;
-                let connectionURI = `mongodb://${mongo.user}:${mongo.password}@${mongo.host}:${mongo.port}`;
+                let connectionURI = `mongodb://${mongo.user}:${mongo.password}@${mongo.host}:${mongo.port}/${mongo.database}`;
 
                 send("system", "Connecting to MongoDB for validation...")
 
