@@ -45,7 +45,7 @@ auto({
     if (error) { logsAvailable ? Log.sendMultiple("system", error, { error: true, colour: "FgRed" }) : console.error(`Failed to initialise: ${error[0]}`) } 
     //Otherwise state the good init
     else { 
-        Log.send("system", "Initialisation successful") 
+        Log.send("system", "Initialisation successful", { colour: "FgGreen" }) 
     }
 
 })
