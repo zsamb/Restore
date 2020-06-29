@@ -22,6 +22,7 @@
     "async": "^3.2.0",
     "is-valid-path": "^0.1.1",
     "moment": "^2.26.0",
-    "mongoose": "^5.9.20"
+    "mongoose": "^5.9.20",
+    "validator": "^13.1.1"
   }
 }
