@@ -64,4 +64,21 @@ const verifyMongo = () => {
     })
 }
 
-module.exports = { verifyLogs, verifyMongo }
+//Start web server service
+const startWeb = (config) => {
+    return new Promise(async (resolve, reject) => {
+
+        const { send } = require("../utils/log");
+        
+        await send("system", "Starting webserver...");
+
+        try {
+            const web = require("../services/web");
+            web(config);
+            resolve();
+        } catch (error) { reject(error.message) }
+
+    })
+}
+
+module.exports = { verifyLogs, verifyMongo, startWeb }

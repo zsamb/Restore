@@ -38,14 +38,20 @@ auto({
         .then(() => callback(),
          (error) => callback(error) );
 
+    }],
+    //Start web server
+    start_web: ["validate_mongo", "validate_logs", (results, callback) => {
+        Init.startWeb(results.config_read)
+        .then(() => { callback()},
+         (error) => callback([error]) );
     }]
 }, (error, results) => {
 
     //If there were errors in init log them and exit
-    if (error) { logsAvailable ? Log.sendMultiple("system", error, { error: true, colour: "FgRed" }) : console.error(`Failed to initialise: ${error[0]}`) } 
-    //Otherwise state the good init
-    else { 
-        Log.send("system", "Initialisation successful", { colour: "FgGreen" }) 
+    if (error) { 
+        logsAvailable ? Log.sendMultiple("system", error, { error: true, colour: "FgRed" }) : console.error(`Failed to initialise: ${error[0]}`);
+        process.exit(5);
+    } else { 
+        Log.send("system", "Initialisation successful", { colour: "FgGreen" });
     }
-
 })
