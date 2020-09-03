@@ -1,7 +1,7 @@
 /*
+Logging helper
 
-Handles logging to terminal and file with specific modes
-
+Handles logging to terminal and file with additional options
 */
 const fs = require("fs");
 const moment = require("moment");

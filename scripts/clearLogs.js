@@ -5,7 +5,7 @@ Clear application logs script
 */
 const fs = require('fs');
 
-const locations = ["backup", "system"];
+const locations = ["backup", "system", "access"];
 const path = "./logs/"
 
 locations.forEach(loc => {

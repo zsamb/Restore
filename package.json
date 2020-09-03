@@ -5,6 +5,7 @@
   "main": "app.js",
   "scripts": {
     "start": "node src/app.js",
+    "dev": "nodemon src/app.js",
     "clearlogs": "node scripts/clearLogs.js",
     "setup": "npm i"
   },
@@ -19,12 +20,16 @@
   },
   "homepage": "https://github.com/TeamCoeus/Restore#readme",
   "dependencies": {
+    "archiver": "^4.0.2",
     "async": "^3.2.0",
     "bcrypt": "^5.0.0",
     "express": "^4.17.1",
+    "hbs": "^4.1.1",
     "is-valid-path": "^0.1.1",
+    "jsonwebtoken": "^8.5.1",
     "moment": "^2.26.0",
     "mongoose": "^5.9.20",
+    "threads": "^1.6.3",
     "validator": "^13.1.1"
   }
 }
