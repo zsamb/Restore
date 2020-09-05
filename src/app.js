@@ -26,7 +26,7 @@ auto({
     //Connect to mongodb to validate creds
     connect_mongo: ["read_config", (results, callback) => {
         const mongo = results.read_config.mongo;
-        const connection = `mongodb://${mongo.user}:${mongo.password}@${mongo.host}:${mongo.port}/${mongo.database}`;
+        const connection = `mongodb://${mongo.user}:${mongo.password}@${mongo.host}:${mongo.port}/${mongo.database}?authSource=${mongo.auth}`;
 
         Log.send("system", `Validating MongoDB at: ${mongo.host}:${mongo.port}...`);
         mongoose.connect(connection, {

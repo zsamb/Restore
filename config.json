@@ -1,13 +1,14 @@
 {
     "mongo": {
-        "host": "mongo.samb8104.xyz",
+        "host": "165.232.32.57",
         "port": 27017,
         "database": "restore",
         "user": "restore",
-        "password": "23B6zu96y27AH4BygNRkFsA"
+        "password": "23B6zu96y27AH4BygNRkFsA",
+	"auth": "admin"
     },
     "web": {
-        "port": 3001,
+        "port": 3000,
         "proxy": true,
         "token_secret": "bGH4uKx1M6r21BxFgmTLioZr5Adr8lFGI1LDf9Q2GhglsJozeTfUmUQ",
         "debug_mode": true
