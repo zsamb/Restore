@@ -5,7 +5,7 @@
   "main": "app.js",
   "scripts": {
     "start": "node src/app.js",
-    "dev": "nodemon src/app.js",
+    "dev": "git pull && nodemon src/app.js",
     "clearlogs": "node scripts/clearLogs.js",
     "setup": "npm i"
   },
