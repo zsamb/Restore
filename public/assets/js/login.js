@@ -2,7 +2,7 @@
 $(document).ready(function() {
   $("#login-form #login-submit").click(function(e) {
     e.preventDefault()
-    fetch("https://restore.samb8104.xyz/user/login", {
+    fetch("/api/user/login", {
       method: "POST",
       body: JSON.stringify({
         username: $('#login-form input[name$="username"]').val(),
@@ -27,9 +27,9 @@ $(document).ready(function() {
               break;
           }
         } else {
-          if (!document.cookie.match(/^(.*;)?\s*MyCookie\s*=\s*[^;]+(.*)?$/)) {
+          if (!document.cookie.match(/^(.*;)?\s*token\s*=\s*[^;]+(.*)?$/)) {
             document.cookie = "token=" + body['token'] + "; path=/; secure";
-            window.location = 'https://restore.jigglything.com/dashboard'
+            window.location = '/dashboard';
           }
         }
       })
