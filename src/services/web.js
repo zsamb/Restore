@@ -4,6 +4,7 @@
 const express = require("express");
 const app = express();
 const Mongoose = require("mongoose");
+const cookieParser = require("cookie-parser");
 
 const Log = require("../utils/log");
 
@@ -38,23 +39,13 @@ try {
         app.use('/assets', express.static('public/assets'))
         app.set("view engine", "hbs");
         app.set("views", path.join(__dirname, "../../templates"));
-
-        //(Headers to allow API access for jacob) REMOVE IN PROD
-        app.use(function(req, res, next) {
-            res.header('Access-Control-Allow-Origin','*');
-            res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-            next();
-        });
+        app.use(cookieParser());
 
         //Register routers
         app.use(UserRouter);
         app.use(GroupRouter);
         app.use(BackupRouter);
         app.use(FrontendRouter);
-
-        //app.get("/test", (req, res) => {
-        //    res.render("test")
-        //})
 
         //Start
         app.listen(config.web.port, () => Log.send("system", "Webserver started", { colour: "FgGreen" }));

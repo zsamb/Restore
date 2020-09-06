@@ -72,6 +72,28 @@ const user = async (req, res, next) => {
     }
 }
 
+const cookie = async (req, res, next) => {
+    try {
+        //Get token from cookie
+        const token = req.cookies.token || undefined;
+        if (!token) { throw new Error() }
+
+        const decodedToken = jwt.verify(token, Config.web.token_secret);
+        const user = await User.findOne({_id: decodedToken._id, 'tokens.token': token });
+        if (!user) { throw new Error() }
+
+        //Attach token and user data
+        req.token = token;
+        req.user  = user;
+
+        next();
+        createLog(req, true);
+    } catch (error) {
+        res.status(401).send({error: true, data: "Invalid authentication"})
+        createLog(req, false);
+    }
+}
+
 //Gets a users group from authentication token and attach it to request
 const group = async (req, res, next) => {
     try {
@@ -96,4 +118,4 @@ const group = async (req, res, next) => {
     }
 }
 
-module.exports = { user , group, none }
+module.exports = { user , group, none, cookie }

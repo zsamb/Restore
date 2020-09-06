@@ -2,6 +2,8 @@ const express = require('express');
 const router = new express.Router();
 const mongoose = require("mongoose");
 
+const Auth = require("../middleware/auth");
+
 router.get("/auth/login", async(req, res) => {
   try {
     res.render("auth/login");
@@ -10,7 +12,7 @@ router.get("/auth/login", async(req, res) => {
   }
 });
 
-router.get("/dashboard", async(req, res) => {
+router.get("/dashboard", Auth.cookie, async(req, res) => {
   try {
     res.render("dashboard");
   } catch (error) {

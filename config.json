@@ -5,12 +5,12 @@
         "database": "restore",
         "user": "restore",
         "password": "23B6zu96y27AH4BygNRkFsA",
-	"auth": "admin"
+        "auth": "admin"
     },
     "web": {
-        "port": 3000,
+        "port": 3001,
         "proxy": true,
-        "token_secret": "bGH4uKx1M6r21BxFgmTLioZr5Adr8lFGI1LDf9Q2GhglsJozeTfUmUQ",
+        "token_secret": "hX7UOeAeEepchKOBor4ABXA3AHzuJUx7JbfJzCWTCo795fl3xPkMhYWkQ5slVWWXDyOGQ",
         "debug_mode": true
     }
 }
