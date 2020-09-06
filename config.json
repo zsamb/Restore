@@ -10,7 +10,7 @@
     "web": {
         "port": 3001,
         "proxy": true,
-        "token_secret": "hX7UOeAeEepchKOBor4ABXA3AHzuJUx7JbfJzCWTCo795fl3xPkMhYWkQ5slVWWXDyOGQ",
+        "token_secret": "GHoOv2Xd0fWYlSpKdw6O0mUidOdROEPpkgpjPzyiLT0eeBpaDyFUcYGmP",
         "debug_mode": true
     }
 }

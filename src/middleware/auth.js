@@ -89,7 +89,7 @@ const cookie = async (req, res, next) => {
         next();
         createLog(req, true);
     } catch (error) {
-        res.status(401).send({error: true, data: "Invalid authentication"})
+        res.redirect("/auth/login");
         createLog(req, false);
     }
 }
