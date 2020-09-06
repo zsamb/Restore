@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Dashboard | Restore</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+  <meta content="utf-8" http-equiv="encoding">
+  <link rel='stylesheet' href='/assets/css/global.css' />
+  <link rel='stylesheet' href='/assets/css/panel.css' />
+  <script src='/assets/js/jquery-3.5.1.min.js'></script>
+  <script src='/assets/js/login.js'></script>
+  <script src='/assets/js/ui.js'></script>
+  <script src='/assets/js/account-editing-ui.js'></script>
+  <script src="https://kit.fontawesome.com/69f29a0b67.js" crossorigin="anonymous"></script>
+</head>
+<body>
+  <div id='main-container'>
+    <div id='sidebar'>
+      <div id='sidebar-title-container'>
+        <h1 id='sidebar-title'>Restore</h1>
+        <h2 id='sidebar-page-title'>Dashboard</h2>
+      </div>
+      <div id='sidebar-menu'>
+        <div class='sidebar-menu-item active'>
+          <i class="fas fa-chart-area sidebar-menu-item-icon"></i>
+          <span class='sidebar-menu-item-title'>Dashboard</span>
+          <i class="fas fa-chevron-right"></i>
+        </div>
+        <div class='sidebar-menu-item'>
+          <i class="fas fa-hdd sidebar-menu-item-icon"></i>
+          <span class='sidebar-menu-item-title'>Backups</span>
+          <i class="fas fa-chevron-right"></i>
+        </div>
+        <div class='sidebar-menu-item'>
+          <i class="fas fa-industry sidebar-menu-item-icon"></i>
+          <span class='sidebar-menu-item-title'>Automations</span>
+          <i class="fas fa-chevron-right"></i>
+        </div>
+        <div class='sidebar-menu-item'>
+          <i class="fas fa-toilet-paper sidebar-menu-item-icon"></i>
+          <span class='sidebar-menu-item-title'>Logs</span>
+          <i class="fas fa-chevron-right"></i>
+        </div>
+        <div class='sidebar-menu-item'>
+          <i class="fas fa-users-cog sidebar-menu-item-icon"></i>
+          <span class='sidebar-menu-item-title'>Users</span>
+          <i class="fas fa-chevron-right"></i>
+        </div>
+        <div class='sidebar-menu-item'>
+          <i class="fas fa-users sidebar-menu-item-icon"></i>
+          <span class='sidebar-menu-item-title'>User Groups</span>
+          <i class="fas fa-chevron-right"></i>
+        </div>
+        <div class='sidebar-menu-item'>
+          <i class="fas fa-cogs sidebar-menu-item-icon"></i>
+          <span class='sidebar-menu-item-title'>Settings</span>
+          <i class="fas fa-chevron-right"></i>
+        </div>
+      </div>
+      <div id='sidebar-account-container'>
+        <img id='sidebar-account-avatar' src='/assets/images/avatar.jpg'/>
+        <div id='sidebar-account-details'>
+          <span id='sidebar-account-name'>Jacob Goddard</span>
+          <span id='sidebar-account-role'>System Administrator</span>
+          <a id='sidebar-account-edit-link'>Edit Account</a>
+        </div>
+      </div>
+    </div>
+    <div id='sidebar-minimize-container'>
+      <div id="sidebar-minimize-button">
+        <i id='sidebar-minimize-icon' class="fas fa-chevron-left"></i>
+      </div>
+    </div>
+    <div id='content'>
+      <div class='floating-container' id='dashboard-path-container'>
+        <span class='dashboard-path-node'>Restore</span>
+        <span class='dashboard-path-slash'>/</span>
+        <span class='dashboard-path-node'>Dashboard</span>
+      </div>
+      <div class='container-row'>
+        <div class='floating-container stat-card' id='disk-usage-tile'>
+          <span class='stat-card-title'>Usage of <b>/</b></span>
+          <div class='stat-card-content'>
+            <i class="fas fa-hdd stat-card-icon"></i>
+            <div class='stat-card-values'>
+              <span class='stat-card-value'><b>12.48GB</b> of <b>25GB</b></span>
+              <span class='stat-card-subvalue'>48.3% Occupied</span>
+            </div>
+          </div>
+        </div>
+
+        <div class='floating-container stat-card' id='cpu-usage-tile'>
+          <span class='stat-card-title'>CPU Usage</span>
+          <div class='stat-card-content'>
+            <i class="fas fa-microchip stat-card-icon"></i>
+            <div class='stat-card-values'>
+              <span class='stat-card-value'><b>85.5%</b> Currently</span>
+              <span class='stat-card-subvalue'>68.1% 24 Hour Avg.</span>
+            </div>
+          </div>
+        </div>
+
+        <div class='floating-container stat-card' id='ram-usage-tile'>
+          <span class='stat-card-title'>RAM Usage</span>
+          <div class='stat-card-content'>
+            <i class="fas fa-memory stat-card-icon"></i>
+            <div class='stat-card-values'>
+              <span class='stat-card-value'><b>12.48GB</b> of <b>16GB</b></span>
+              <span class='stat-card-subvalue'>92.3% Currently Used</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <div id='edit-account-popup-container' class='popup-window-container'>
+    <div class='popup-window'>
+      <div class='popup-window-titlebar'>
+        <span class='popup-window-title'>Edit Account</span>
+        <span class='popup-window-close'>X</span>
+      </div>
+      <div class='popup-window-content'>
+        <div class='popup-row'>
+          <form>
+            <h2>Personal Details</h2>
+            <div class='form-collection'>
+              <div class='form-row popup-row'>
+                <div class='form-input-container'>
+                  <label for='account-first-name-edit'>First Name:</label>
+                  <input id='account-first-name-edit' value='Jacob'></input>
+                </div>
+                <div class='form-input-container'>
+                  <label for='account-last-name-edit'>Last Name:</label>
+                  <input id='account-last-name-edit' value='Goddard'></input>
+                </div>
+              </div>
+              <div class='form-input-container'>
+                <label for='account-email-edit'>E-mail Address:</label>
+                <input type='email' id='account-email-edit' value='j@cobg.me'></input>
+              </div>
+            </div>
+
+
+
+            <h2>Change Password</h2>
+            <div class='form-collection'>
+              <div class='form-input-container'>
+                <label for='account-old-password'>Old Password:</label>
+                <input type='password' id='account-old-password'></input>
+              </div>
+
+              <div class='form-input-container'>
+                <label for='account-new-password'>New Password:</label>
+                <input type='password' id='account-new-password'></input>
+              </div>
+
+              <div class='form-input-container'>
+                <label for='account-confirm-password'>Confirm New Password:</label>
+                <input type='password'  id='account-confirm-password'></input>
+              </div>
+            </div>
+          </form>
+          <div id='account-photo-edit-container'>
+            <h2>Profile Picture:</h2>
+            <div class='form-collection'>
+              <img id='account-photo-edit-image' src='/assets/images/avatar.jpg'/>
+              <div id='account-photo-edit-button-container'>
+                <div class='button style-two'>
+                  <span>Remove Photo</span>
+                </div>
+                <div class='button style-one'>
+                  <span>Replace Photo</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class='popup-window-bottombar'>
+        <div id='popup-window-bottom-button-container'>
+          <div class='button style-two popup-cancel-button'>
+            <span>Cancel</span>
+          </div>
+          <div class='button style-one popup-save-button'>
+            <span>Save</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id='loading-popup'>
+    <div id="loading-popup-ring"></div>
+  </div>
+
+  <div id='popup-overlay' class='popup-overlay'></div>
+
+
+  <script>
+  $(document).ready(function() {
+    account_edit_popup_open = false;
+    $("#sidebar-minimize-button").click(function() {
+      $("#sidebar").toggleClass("minimized")
+      $("#sidebar-minimize-icon").toggleClass("fa-chevron-left")
+      $("#sidebar-minimize-icon").toggleClass("fa-chevron-right")
+    })
+
+
+  })
+  </script>
+</body>
+</html>

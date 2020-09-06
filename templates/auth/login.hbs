@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Login | Restore</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+  <meta content="utf-8" http-equiv="encoding">
+  <link rel='stylesheet' href='/assets/css/global.css' />
+  <link rel='stylesheet' href='/assets/css/auth.css' />
+  <script src='/assets/js/jquery-3.5.1.min.js'></script>
+  <script src='/assets/js/login.js'></script>
+  <script src="https://kit.fontawesome.com/69f29a0b67.js" crossorigin="anonymous"></script>
+</head>
+<body>
+  <div id='content'>
+    <div class='floating-container auth-container' id='login-form-container'>
+      <h2>Welcome</h2>
+      <p>Please login to continue</p>
+      <form id='login-form' class='auth-form'>
+        <label for='username-field'>Username:</label>
+        <div class='input-container'>
+          <i class="fas fa-user"></i>
+          <input type="text" name="username" id='username-field'>
+        </div>
+
+        <label for='password-field'>Password:</label>
+        <div class='input-container'>
+          <i class="fas fa-key"></i>
+          <input type="password" name="password" id='password-field'>
+        </div>
+
+
+        <input type='submit' id='login-submit' name='submit' value='Login'>
+      </form>
+      <p class='small-print'>Don't have an account? <b>Ask your administrator.</b></p>
+    </div>
+  </div>
+</body>
+</html>
