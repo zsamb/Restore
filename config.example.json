@@ -1,0 +1,17 @@
+{
+    "init": true,
+    "mongo": {
+        "host": "",
+        "port": 27017,
+        "database": "restore",
+        "user": "restore",
+        "password": "",
+        "auth": "admin"
+    },
+    "web": {
+        "port": 3000,
+        "proxy": false,
+        "token_secret": "",
+        "debug_mode": false
+    }
+}
