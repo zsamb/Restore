@@ -29,7 +29,7 @@ $(document).ready(function() {
         } else {
           if (!document.cookie.match(/^(.*;)?\s*token\s*=\s*[^;]+(.*)?$/)) {
             document.cookie = "token=" + body['token'] + "; path=/; secure";
-            window.location = '/dashboard';
+            window.location = '/dash/home';
           }
         }
       })
