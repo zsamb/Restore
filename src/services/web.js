@@ -31,6 +31,13 @@ try {
 
         //Configure express
         app.use(express.json())
+        //Catch parsing errors from above
+        app.use((err, req, res, next) => {
+            if (err instanceof SyntaxError && err.status >= 400 && err.status < 500 && err.message.indexOf('JSON') !== -1) {
+                res.status(400).send({error: true, data: "Invalid JSON input"});
+            } else { next() }
+        })
+
         if (config.web.proxy) {
             app.set("trust_proxy", true);
             Log.send("system", "Set trust_proxy to true");
