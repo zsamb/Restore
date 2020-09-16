@@ -17,7 +17,7 @@ router.get("/auth/login", async(req, res) => {
       const decodedToken = jwt.verify(token, Config.web.token_secret);
       const user = await User.findOne({_id: decodedToken._id, 'tokens.token': token });
       if (!user) { res.render("auth/login") }
-      else { res.redirect("/dashboard") }
+      else { res.redirect("/dash/home") }
     }
   } catch (error) {
     res.status(500).send({error: true, data: error.message});
@@ -33,7 +33,7 @@ router.get("/dash", Auth.cookie, async(req, res) => {
 });
 
 router.get("/dash/home", Auth.cookie, async(req, res) => {
-  try {decodeURI
+  try {
     res.render("dash/home", {
       user_first_name: "Jacob",
       user_last_name: "Goddard",
