@@ -33,8 +33,12 @@ router.get("/dash", Auth.cookie, async(req, res) => {
 });
 
 router.get("/dash/home", Auth.cookie, async(req, res) => {
-  try {
-    res.render("dash/home");
+  try {decodeURI
+    res.render("dash/home", {
+      user_full_name: "Jacob Goddard",
+      user_role: "Restore Developer",
+      user_profile_url: "https://scontent-lhr8-1.cdninstagram.com/v/t51.2885-19/s150x150/117223801_153040139702908_6023617690552705718_n.jpg?_nc_ht=scontent-lhr8-1.cdninstagram.com&_nc_ohc=gVGvY4uJ6gAAX_ULLpg&oh=f4a22197b93e6aa74b80dc679564bd97&oe=5F89E95B"
+    });
   } catch (error) {
     res.status(500).send({error: true, data: error.message});
   }
