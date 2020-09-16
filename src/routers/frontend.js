@@ -34,6 +34,13 @@ router.get("/dash", Auth.cookie, async(req, res) => {
 
 router.get("/dash/home", Auth.cookie, async(req, res) => {
   try {
+    /*
+    SAMS MONGODB RENDERING HELP
+    Because I have a massive head, authenticating users through the cookie middleware attaches the authenticated
+    user to the request body. If you need the user, you can access it at req.user. You are muchly welcome.
+    */
+
+
     res.render("dash/home", {
       user_first_name: "Jacob",
       user_last_name: "Goddard",

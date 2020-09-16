@@ -12,12 +12,12 @@ const userSchema = new mongoose.Schema({
         type: String,
         trim: true,
         required: [true, "A username is required"],
-        unique: [true, "This username is already taken"]
+        unique: true
     },
     email: {
         type: String,
         lowercase: true,
-        required: true,
+        required: [true, "An email is required"],
         trim: true,
         unique: true,
         validate(value) {
@@ -31,6 +31,18 @@ const userSchema = new mongoose.Schema({
         trim: true,
         minlength: 2,
         maxlength: 32
+    },
+    last_name: {
+        type: String,
+        trim: true,
+        minlength: 2,
+        maxlength: 32
+    },
+    job_title: {
+        type: String,
+        trim: true,
+        minlength: 3,
+        maxlength: 64
     },
     group: {
         type: String,
