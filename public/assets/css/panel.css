@@ -243,6 +243,7 @@
 
 #sidebar-account-avatar {
   height: 80px;
+  width: 80px;
   border-radius: 50%;
   border: 2px #ccc solid;
 }
