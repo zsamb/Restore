@@ -60,7 +60,7 @@
       <div id='sidebar-account-container'>
         <img id='sidebar-account-avatar' src='{{user_profile_url}}'/>
         <div id='sidebar-account-details'>
-          <span id='sidebar-account-name'>{{user_full_name}}</span>
+          <span id='sidebar-account-name'>{{user_first_name}} {{user_last_name}}</span>
           <span id='sidebar-account-role'>{{user_role}}</span>
           <a id='sidebar-account-edit-link'>Edit Account</a>
         </div>
@@ -128,16 +128,16 @@
               <div class='form-row popup-row'>
                 <div class='form-input-container'>
                   <label for='account-first-name-edit'>First Name:</label>
-                  <input id='account-first-name-edit' value='Jacob'></input>
+                  <input id='account-first-name-edit' value='{{user_first_name}}'></input>
                 </div>
                 <div class='form-input-container'>
                   <label for='account-last-name-edit'>Last Name:</label>
-                  <input id='account-last-name-edit' value='Goddard'></input>
+                  <input id='account-last-name-edit' value='{{user_last_name}}'></input>
                 </div>
               </div>
               <div class='form-input-container'>
                 <label for='account-email-edit'>E-mail Address:</label>
-                <input type='email' id='account-email-edit' value='j@cobg.me'></input>
+                <input type='email' id='account-email-edit' value='{{user_email}}'></input>
               </div>
             </div>
 
@@ -164,7 +164,7 @@
           <div id='account-photo-edit-container'>
             <h2>Profile Picture:</h2>
             <div class='form-collection'>
-              <img id='account-photo-edit-image' src='/assets/images/avatar.jpg'/>
+              <img id='account-photo-edit-image' src='{{user_profile_url}}'/>
               <div id='account-photo-edit-button-container'>
                 <div class='button style-two'>
                   <span>Remove Photo</span>
