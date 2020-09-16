@@ -49,5 +49,17 @@ groupSchema.pre("save", async function (next) {
     next()
 })
 
+//Make uniqueness error messages understandable
+groupSchema.post('save', function(error, doc, next) {
+    if (error.name === 'MongoError' && error.code === 11000) {
+      let indexIndex = error.message.indexOf("index:");
+      let indexDup = error.message.indexOf("dup key");
+      let errorKey = error.message.substring(indexIndex + 6, indexDup - 3).trim();
+      next(new Error(`The ${errorKey} ${doc[errorKey]} is already in use.`));
+    } else {
+      next(error);
+    }
+});
+
 const Group = mongoose.model("Group", groupSchema)
 module.exports = Group;

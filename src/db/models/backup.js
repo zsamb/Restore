@@ -47,5 +47,17 @@ const backupSchema = new mongoose.Schema({
     }
 }, { timestamps: true })
 
+//Make uniqueness error messages understandable
+backupSchema.post('save', function(error, doc, next) {
+    if (error.name === 'MongoError' && error.code === 11000) {
+      let indexIndex = error.message.indexOf("index:");
+      let indexDup = error.message.indexOf("dup key");
+      let errorKey = error.message.substring(indexIndex + 6, indexDup - 3).trim();
+      next(new Error(`The ${errorKey} ${doc[errorKey]} is already in use.`));
+    } else {
+      next(error);
+    }
+});
+
 const Backup = mongoose.model("Backup", backupSchema)
 module.exports = Backup;

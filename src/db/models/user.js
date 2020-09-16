@@ -11,8 +11,8 @@ const userSchema = new mongoose.Schema({
     username: {
         type: String,
         trim: true,
-        required: true,
-        unique: true
+        required: [true, "A username is required"],
+        unique: [true, "This username is already taken"]
     },
     email: {
         type: String,
@@ -25,6 +25,12 @@ const userSchema = new mongoose.Schema({
                 throw new Error("Invalid user email")
             }
         }
+    },
+    first_name: {
+        type: String,
+        trim: true,
+        minlength: 2,
+        maxlength: 32
     },
     group: {
         type: String,
@@ -58,6 +64,18 @@ userSchema.pre("save", async function(next) {
     }
     next()
 })
+
+//Make uniqueness error messages understandable
+userSchema.post('save', function(error, doc, next) {
+    if (error.name === 'MongoError' && error.code === 11000) {
+      let indexIndex = error.message.indexOf("index:");
+      let indexDup = error.message.indexOf("dup key");
+      let errorKey = error.message.substring(indexIndex + 6, indexDup - 3).trim();
+      next(new Error(`The ${errorKey} ${doc[errorKey]} is already in use.`));
+    } else {
+      next(error);
+    }
+});
 
 //Generate auth token
 userSchema.methods.newAuthToken = async function () {
