@@ -13,5 +13,8 @@
         "proxy": false,
         "token_secret": "",
         "debug_mode": false
+    },
+    "options": {
+        "fileUploadLimit": 1
     }
 }
