@@ -256,6 +256,21 @@ router.get("/api/user/me/picture", Auth.user, async (req, res) => {
 })
 
 /*
+GET PROFILE PICTURE AUTH COOKIES
+Gets the profile picture of a user authenticated by cookie
+Permissions: authenticated cookie
+*/
+router.get("/api/user/cookie/picture", Auth.cookie, async (req, res) => {
+    try {
+        if (!req.user.picture) { throw new Error() }
+        res.set("Content-Type", "image/png");
+        res.send(req.user.picture);
+    } catch (error) {
+        res.status(400).send(error.message);
+    }
+})
+
+/*
 GET PROFILE PICTURE BY ID
 Gets the profile picture of a user
 Permissions: view_user
