@@ -7,8 +7,11 @@ const express = require('express');
 const User = require("../db/models/user");
 const router = new express.Router();
 const mongoose = require("mongoose");
+const multer = require('multer');
+const sharp = require('sharp');
 
 const Auth = require("../middleware/auth");
+const config = require("../../config.json");
 
 /*
 FETCH USERS
@@ -186,9 +189,87 @@ router.delete("/api/user/:id", Auth.group, async (req, res) => {
             if (!user) { throw new Error("Could not find that user") }
             else {
                 await user.remove();
-                res.status(200).send()
+                res.status(200).send();
             }
         } else { throw new Error("You have incorrect permissions")}
+    } catch (error) {
+        res.status(400).send({error: true, data: error.message});
+    }
+})
+
+//File upload config
+const upload = multer({
+    limits: {
+        //Transfer the megabytes in config to bytes
+        fileSize: config.options.fileUploadLimit * 1000000
+    },
+    fileFilter(req, file, callback) {
+        if (!file.originalname.match(/\.(jpg|jpeg|png)$/)) {
+            return callback(new Error("Please upload an image"));
+        }
+        callback(undefined, true);
+    }  
+})
+
+/*
+UPLOAD PROFILE PICTURE
+Uploads a profile pic to the user who is logged in
+Permissions: authenticated
+*/
+router.post("/api/user/me/picture", Auth.user, upload.single("picture"), async (req, res) => {
+    if (req.file == undefined) { res.status(400).send({error: true, data: "Please upload an image"})}
+    else {
+        const picBuffer = await sharp(req.file.buffer).resize({ width: 250, height: 250 }).png().toBuffer();
+        req.user.picture = picBuffer;
+        await req.user.save();
+        
+        res.status(200).send();
+    }
+}, (error, req, res, next) => {
+    res.status(400).send({ error: true, data: error.message });
+})
+
+/*
+DELETE PROFILE PICTURE
+Deletes the logged in users profile pic
+Permissions: authenticated
+*/
+router.delete("/api/user/me/picture", Auth.user, async (req, res) => {
+    req.user.picture = undefined;
+    await req.user.save();
+    res.status(200).send();
+})
+
+/*
+GET PROFILE PICTURE
+Gets the logged in users profile pic
+Permissions: authenticated
+*/
+router.get("/api/user/me/picture", Auth.user, async (req, res) => {
+    try {
+        if (!req.user.picture) { throw new Error() }
+        res.set("Content-Type", "image/png");
+        res.send(req.user.picture);
+    } catch (error) {
+        res.status(400).send(error.message);
+    }
+})
+
+/*
+GET PROFILE PICTURE BY ID
+Gets the profile picture of a user
+Permissions: view_user
+*/
+router.get("/api/user/picture/:id", Auth.group, async (req, res) => {
+    try {
+        if (req.group.permissions.includes("view_user")) {
+            let user = await User.findById(req.params.id);
+            if (!user) { throw new Error("Could not find that user") }
+            else {
+                res.set("Content-Type", "image/png");
+                res.status(200).send(user.picture);
+            }
+        } else { throw new Error("You have incorrect permissions") }
     } catch (error) {
         res.status(400).send({error: true, data: error.message});
     }
