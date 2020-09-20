@@ -21,9 +21,24 @@ class local {
                 testStream.on("error", (error) => { reject(`Invalid target location, is not writable: ${this.location}`)})
                 testStream.on("ready", () => { 
                     testStream.close();
+                    //Cleanup
+                    fs.unlinkSync(this.location + `/${this.fileName}`);
                     resolve();
                 })
             } else { reject(`Invalid local target location: ${this.location}`) }
+        })
+    }
+
+    //Verify that restoring from this target is possible
+    verifyRestore() {
+        return new Promise((resolve, reject) => {
+            //Check that the file created from this target still exists
+            let testStream = fs.createReadStream(this.location);
+            testStream.on("error", (error) => { reject("Could not access backup files") });
+            testStream.on("ready", () => {
+                testStream.close();
+                resolve();
+            })
         })
     }
 
@@ -33,6 +48,14 @@ class local {
             let writable = fs.createWriteStream(this.location);
             return writable;
         } catch (error) { throw new Error("Failed create writable stream to local output") }
+    }
+
+    //Create a readStream to pipe into the restoration
+    restoreStream() {
+        try {
+            let readable = fs.createReadStream(this.location);
+            return readable;
+        } catch (error) { throw new Error("Failed to create read stream to local restore target")}
     }
 
     //Delete the file produced by this action - returns a single error message
