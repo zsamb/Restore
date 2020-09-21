@@ -165,7 +165,7 @@ router.patch("/api/user/me/update", Auth.user, async (req, res) => {
         const updates = Object.keys(req.body);
         if (updates.length < 1) { throw new Error("No updates were sent") }
 
-        const validUpdates = ["username", "email", "password", "group"];
+        const validUpdates = ["username", "email", "password", "group", "first_name", "last_name"];
         const validRequest = validUpdates.every(update => validUpdates.includes(update));
         if (!validRequest) { throw new Error("Invalid updates")};
         //Update user
