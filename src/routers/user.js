@@ -165,7 +165,7 @@ router.patch("/api/user/me/update", Auth.user, async (req, res) => {
         const updates = Object.keys(req.body);
         if (updates.length < 1) { throw new Error("No updates were sent") }
 
-        const validUpdates = ["username", "email", "password", "group", "first_name", "last_name"];
+        const validUpdates = ["username", "email", "password", "group", "first_name", "last_name", "job_title"];
         const validRequest = validUpdates.every(update => validUpdates.includes(update));
         if (!validRequest) { throw new Error("Invalid updates")};
         //Update user
@@ -177,6 +177,32 @@ router.patch("/api/user/me/update", Auth.user, async (req, res) => {
         res.status(400).send({error: true, data: error.message});
     }
 })
+
+/*
+UPDATE USER BY COOKIE
+Update a user authenticated by cookie
+Permissions: authenticated cookie
+*/
+router.patch("/api/user/cookie/update", Auth.cookie, async (req, res) => {
+    try {
+
+        //Check all updates are valid
+        const updates = Object.keys(req.body);
+        if (updates.length < 1) { throw new Error("No updates were sent") }
+
+        const validUpdates = ["username", "email", "password", "group", "first_name", "last_name", "job_title"];
+        const validRequest = validUpdates.every(update => validUpdates.includes(update));
+        if (!validRequest) { throw new Error("Invalid updates")};
+        //Update user
+        updates.forEach(update => req.user[update] = req.body[update]);
+        await req.user.save();
+        res.status(200).send(req.user);
+
+    } catch (error) {
+        res.status(400).send({error: true, data: error.message});
+    }
+})
+
 /*
 DELETE USERS
 Deletes a user from the database
@@ -251,7 +277,7 @@ router.get("/api/user/me/picture", Auth.user, async (req, res) => {
         res.set("Content-Type", "image/png");
         res.send(req.user.picture);
     } catch (error) {
-        res.status(400).send(error.message);
+        res.status(400).send({error: true, data: error.message});
     }
 })
 
@@ -266,7 +292,7 @@ router.get("/api/user/cookie/picture", Auth.cookie, async (req, res) => {
         res.set("Content-Type", "image/png");
         res.send(req.user.picture);
     } catch (error) {
-        res.status(400).send(error.message);
+        res.status(400).send({error: true, data: error.message});
     }
 })
 
