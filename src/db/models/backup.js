@@ -5,7 +5,7 @@ const allowedTargets = [];
 const backupSchema = new mongoose.Schema({
     owner: {
         type: mongoose.Types.ObjectId,
-        required: true
+        required: [true, "A backup owner is required"]
     },
     notes: {
         type: [String],
@@ -13,14 +13,14 @@ const backupSchema = new mongoose.Schema({
     },
     sources: {
         type: [String],
-        required: true,
+        required: [true, "A backup source is required"],
         validate(sources) {
             if (sources.length < 1 || sources.length > 5) { throw new Error("You have too many/little sources") }
         }
     },
     targets: {
         type: [String],
-        required: true,
+        required: [true, "A backup target is required"],
         validate(targets) {
             //Limit to one target (v1)
             //if (targets.length != 1) { throw new Error("You have too many/little targets") }

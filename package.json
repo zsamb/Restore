@@ -5,7 +5,7 @@
   "main": "app.js",
   "scripts": {
     "start": "node src/app.js",
-    "dev": "git pull && nodemon -e js,hbs,css,html src/app.js",
+    "dev": "git pull && nodemon --delay 2 -e js,hbs,css,html src/app.js",
     "clearlogs": "node scripts/clearLogs.js",
     "setup": "npm i"
   },
@@ -28,7 +28,10 @@
     "hbs": "^4.1.1",
     "jsonwebtoken": "^8.5.1",
     "moment": "^2.26.0",
-    "mongoose": "^5.9.20",
-    "validator": "^13.1.1"
+    "mongoose": "^5.10.6",
+    "multer": "^1.4.2",
+    "sharp": "^0.26.1",
+    "unzipper": "^0.10.11",
+    "validator": "^13.1.17"
   }
 }

@@ -26,12 +26,12 @@ const groupSchema = new mongoose.Schema({
     name: {
         type: String,
         trim: true,
-        required: true,
+        required: [true, "A group name is required"],
         unique: true
     },
     permissions: {
         type: [String],
-        required: true,
+        required: [true, "Group permissions are required"],
         validate(perms) {
             if (perms.includes("*")) { perms = groupPermissions }
             if (!perms.length >= 1) { throw new Error("You need to provide permissions")}

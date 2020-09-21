@@ -8,7 +8,7 @@ const path = require("path");
 const parse = (urlType) => {
     return new Promise((resolve, reject) => {
 
-        if (urlType == "sources" || urlType == "targets") {
+        if (urlType == "sources" || urlType == "targets" || "restores") {
             //Get all actions of the type
             fs.promises.readdir(path.join(__dirname + `/${urlType}`))
             .then(files => {

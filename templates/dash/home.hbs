@@ -58,7 +58,7 @@
         </div>
       </div>
       <div id='sidebar-account-container'>
-        <img id='sidebar-account-avatar' src='{{user_profile_url}}'/>
+        <img id='sidebar-account-avatar' src='/api/user/cookie/picture'/>
         <div id='sidebar-account-details'>
           <span id='sidebar-account-name'>{{user_first_name}} {{user_last_name}}</span>
           <span id='sidebar-account-role'>{{user_role}}</span>
@@ -164,7 +164,7 @@
           <div id='account-photo-edit-container'>
             <h2>Profile Picture:</h2>
             <div class='form-collection'>
-              <img id='account-photo-edit-image' src='{{user_profile_url}}'/>
+              <img id='account-photo-edit-image' src='/api/user/cookie/picture'/>
               <div id='account-photo-edit-button-container'>
                 <div class='button style-two'>
                   <span>Remove Photo</span>

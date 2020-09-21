@@ -29,31 +29,31 @@ const userSchema = new mongoose.Schema({
     first_name: {
         type: String,
         trim: true,
-        minlength: 2,
-        maxlength: 32
+        minlength: [2, "First name is too short"],
+        maxlength: [32, "First name is too long"]
     },
     last_name: {
         type: String,
         trim: true,
-        minlength: 2,
-        maxlength: 32
+        minlength: [2, "Last name is too short"],
+        maxlength: [32, "Last name is too long"]
     },
     job_title: {
         type: String,
         trim: true,
-        minlength: 3,
-        maxlength: 64
+        minlength: [3, "Job title is too short"],
+        maxlength: [64, "Job title is too long"]
     },
     group: {
         type: String,
         trim: true,
-        required: true
+        required: [true, "A group is required"]
     },
     password: {
         type: String,
-        required: true,
+        required: [true, "A password is required"],
         trim: true,
-        minlength: 7
+        minlength: [7, "Password is too short"]
     },
     tokens: [{
         token: {
@@ -61,6 +61,9 @@ const userSchema = new mongoose.Schema({
             required: true
         }
     }],
+    picture: {
+        type: Buffer
+    }
 
 }, { timestamps: true });
 
@@ -103,6 +106,7 @@ userSchema.methods.toJSON = function () {
     const user = this.toObject();
     delete user.password;
     delete user.tokens;
+    delete user.picture;
     return user;
 }
 

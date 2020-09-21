@@ -208,7 +208,7 @@ router.get("/api/backup/:id", Auth.group, async (req, res) => {
             else { res.status(200).send({backup}) }
         } else { throw new Error("You have incorrect permissions") }
     } catch (error) {
-        res.status(400).send({error: true, data: error.message})
+        res.status(400).send({error: true, data: error.message});
     }
 })
 
@@ -217,10 +217,97 @@ RESTORE BACKUP
 Restores a backup
 Permissions: restore_backup
 */
-router.post("/api/backup/restore", Auth.group, async (req, res) => {
-    if (req.group.permissions.includes("restore_backup")) {
+router.post("/api/backup/restore/:id", Auth.group, async (req, res) => {
+    try {
 
-    } else { res.status(403).send({ error: true, data: "You have invalid permissions" }) }
+        let data = {};
+        
+        if (req.group.permissions.includes("restore_backup")) {
+            //Verify backup exists
+            let backup = await Backup.findById(req.params.id);
+            let backupIdentifier = backup.id.substring(0, 7);
+            if (!backup) { throw new Error("Could not find backup")}
+            else {
+                //Check if the backup is complete
+                if (backup.status == "Complete") {
+                    //Check chosen target exists
+                    if (backup.targets[req.body.target]) {
+                        //Validate target
+                        parse("targets")
+                        .then(targetActions => {
+
+                            data.targetName = backup.targets[req.body.target].split(":")[0];
+                            data.targetArgs = backup.targets[req.body.target].split(":");
+                            data.targetArgs.splice(0, 1);
+                            
+                            data.targetAction = new targetActions[data.targetName][data.targetName](data.targetArgs);
+                            return data.targetAction.verifyRestore();
+
+                        })
+                        //Parse restore actions
+                        .then(() => { return parse("restores") })
+                        //Select target to restore to
+                        .then(restoreActions => {
+                            
+                            if (req.body.restoreTarget) { 
+
+                                let lastSlash = data.targetAction.location.lastIndexOf("/");
+                                let fileName = data.targetAction.location.substring(lastSlash + 1, data.targetAction.location.length);
+                                let restoreTarget = req.body.restoreTarget + `:${fileName}`;
+
+                                data.restoreActions = restoreActions;
+                                data.restoreTarget = restoreTarget;
+
+                                return validateUrls([restoreTarget], data.restoreActions);
+                                
+                            } else { throw "Please specify a restore target" }
+
+                        })
+                        //Restore the file to location
+                        .then(() => {
+
+                            let restoreName = data.restoreTarget.split(":")[0];
+                            let restoreArgs = data.restoreTarget.split(":");
+                            restoreArgs.splice(0, 1);
+
+                            send("backup", `${backupIdentifier} Beginning backup restoration.. [${restoreName}]`);
+                            data.restoreAction = new data.restoreActions[restoreName][restoreName](restoreArgs);
+                            //Get readstream
+                            let restoreStream = data.targetAction.restoreStream();
+                            send("backup", `${backupIdentifier} > Created read stream`);
+                            return data.restoreAction.restore(restoreStream);
+
+                        })
+                        //Check if extraction and finish up
+                        .then(() => {
+                            send("backup", `${backupIdentifier} > Backup files restored`);
+                            if (req.body.extract) { 
+                                send("backup", `${backupIdentifier} > Extracting..`)
+                                data.restoreAction.extract()
+                                .then(() => {
+                                    send("backup", `${backupIdentifier} Restoration and extraction complete`); 
+                                    res.status(200).send();
+                                })
+                                .catch(error => {
+                                    res.status(400).send({ error: true, data: error });
+                                    send("backup", `Backup restoration error: ${error}`, {error: true});
+                                })
+                            } else { 
+                                send("backup", `${backupIdentifier} Restoration complete`);
+                                res.status(200).send();
+                            }
+                        })
+                        .catch(error => {  
+                            res.status(400).send({ error: true, data: error });
+                            send("backup", `Backup restoration error: ${error}`, {error: true});
+                        })
+                    } else { throw new Error("Could not find selected target") }
+                } else { throw new Error("This backup cannot be restored") }
+            }
+        } else { res.status(403).send({ error: true, data: "You have invalid permissions" }) }
+    } catch (error) {
+        res.status(400).send({error: true, data: error.message});
+    }
 })
 
 module.exports = router;
