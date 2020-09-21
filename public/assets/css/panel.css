@@ -400,12 +400,12 @@
   cursor: pointer;
 }
 
-.style-two {
+.button.style-two {
   background-color: #1a1a1a;
   border-color: #b52a2a;
 }
 
-.style-one {
+.button.style-one {
   background-color: #b52a2a;
   border-color: #b52a2a;
 }
@@ -414,6 +414,13 @@
   border-color: #fff;
   background: #fff;
   color: #b52a2a;
+}
+
+.disabled, .disabled:hover {
+  background-color: #595959 !important;
+  border-color: #595959 !important;
+  color: #cccccc !important;
+  cursor: default !important;
 }
 
 #account-photo-edit-image {
@@ -466,7 +473,16 @@
   width: 100%;
 }
 
-.visible-loading-popup #loading-popup-ring {
+.visible-loading-popup #loading-popup-message {
+  color: #fff;
+  position: relative;
+  text-align: center;
+  top: 47%;
+  font-size: 22px;
+  width: 100%;
+}
+
+.visible-loading-popup #loading-popup-ring, .visible-loading-popup #loading-popup-message {
   display: inline-block;
   z-index: 1000;
 }
@@ -491,6 +507,8 @@
   border-color: #fff transparent #fff transparent;
   animation: lds-dual-ring 1.2s linear infinite;
 }
+
+
 @keyframes lds-dual-ring {
   0% {
     transform: rotate(0deg);
