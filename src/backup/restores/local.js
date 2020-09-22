@@ -1,5 +1,5 @@
 /*
-    Backup target: Local file
+    Restore target: Local file
     Creates writable stream to path
 */
 const fs = require("fs");
