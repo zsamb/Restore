@@ -1,4 +1,7 @@
 const mongoose = require('mongoose');
+
+const Config = require("../../../config.json");
+
 const allowedSources = [""];
 const allowedTargets = [];
 
@@ -15,7 +18,7 @@ const backupSchema = new mongoose.Schema({
         type: [String],
         required: [true, "A backup source is required"],
         validate(sources) {
-            if (sources.length < 1 || sources.length > 5) { throw new Error("You have too many/little sources") }
+            if (sources.length < 1 || sources.length > Config.options.maximumSources) { throw new Error("You have too many/little sources") }
         }
     },
     targets: {
@@ -24,7 +27,7 @@ const backupSchema = new mongoose.Schema({
         validate(targets) {
             //Limit to one target (v1)
             //if (targets.length != 1) { throw new Error("You have too many/little targets") }
-            if (targets.length < 1 || targets.length > 5) { throw new Error("You have too many/little targets") }
+            if (targets.length < 1 || targets.length > Config.options.maximumTargets) { throw new Error("You have too many/little targets") }
         }
     },
     size: {

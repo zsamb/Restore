@@ -15,6 +15,8 @@
         "debug_mode": false
     },
     "options": {
-        "fileUploadLimit": 1
+        "fileUploadLimit": 1,
+        "maximumSources": 5,
+        "maximumTargets": 5
     }
 }
