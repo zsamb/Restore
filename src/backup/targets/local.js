@@ -22,7 +22,7 @@ class local {
                 testStream.on("ready", () => { 
                     testStream.close();
                     //Cleanup
-                    fs.unlinkSync(this.location + `/${this.fileName}`);
+                    fs.unlinkSync(this.location);
                     resolve();
                 })
             } else { reject(`Invalid local target location: ${this.location}`) }
