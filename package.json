@@ -5,7 +5,7 @@
   "main": "app.js",
   "scripts": {
     "start": "node src/app.js",
-    "dev": "git pull && nodemon -e js,hbs,css,html src/app.js",
+    "dev": "git pull && nodemon --delay 3 -e js,hbs,css,html src/app.js",
     "clearlogs": "node scripts/clearLogs.js",
     "setup": "npm i"
   },
