@@ -19,7 +19,10 @@ const groupPermissions = [
     "create_auto",
     "update_auto",
     "delete_auto",
-    "view_auto"
+    "view_auto",
+
+    "view_logs",
+    "delete_logs"
 ]
 
 const groupSchema = new mongoose.Schema({
