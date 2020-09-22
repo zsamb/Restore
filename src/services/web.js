@@ -14,6 +14,7 @@ const UserRouter = require("../routers/user");
 const GroupRouter = require("../routers/group");
 const BackupRouter = require("../routers/backup");
 const FrontendRouter = require("../routers/frontend");
+const LogRouter = require("../routers/log");
 
 let connectionURI = process.argv[2];
 let config = JSON.parse(process.argv[3]);
@@ -52,6 +53,7 @@ try {
         app.use(GroupRouter);
         app.use(BackupRouter);
         app.use(FrontendRouter);
+        app.use(LogRouter);
 
         //Start
         const httpServer = http.createServer(app);
@@ -59,13 +61,13 @@ try {
         let errored = false;
         let retries = 1;
 
-        httpServer.on("error", (error) => {
+        httpServer.on("error", async (error) => {
             if (errored) {
                 Log.send("system", `Failed to start webserver: ${error.message}`, { error: true, colour: "FgRed"});
                 process.exit();
             } else if (error.code == "EADDRINUSE") {
                 if (retries == 3) { errored = true } else { retries++ }
-                Log.send("system", `Port ${config.web.port} is already in use, retrying in 5s..`, { error: true, colour: "FgRed"});
+                await Log.send("system", `Port ${config.web.port} is already in use, retrying in 5s..`, { error: true, colour: "FgRed"});
                 setTimeout(() => {
                     httpServer.listen(config.web.port, () => Log.send("system", "Webserver started", { colour: "FgGreen" }) )
                 }, 5000);
