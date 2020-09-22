@@ -25,7 +25,10 @@ const createLog = (request, auth) => {
         //Save to file
         fs.promises.appendFile(`./logs/access/access-${fileTimestamp}`, JSON.stringify({time: objectTimestamp, user: (auth ? request.user.username : "Unauthenticated"), endpoint, senderMethod, senderIP}).concat("\n"))
         .then(() => {
-            if (Config.web.debug_mode) { console.log(`\x1b[34mDebug: New request: ${senderMethod}@${endpoint} from ${auth ? request.user.username : "Unauthenticated"}@${senderIP}\x1b[0m`) }
+            if (Config.web.debug_mode) {
+                let debugTimestamp = `[ ${moment().format("HH:mm:ss")} ]`;
+                console.log(`\x1b[34m[ DEBUG ] ${debugTimestamp} New request: ${senderMethod}@${endpoint} from ${auth ? request.user.username : "Unauthenticated"}@${senderIP}\x1b[0m`) 
+            }
             resolve()
         })
         .catch(error => reject(error.message))
@@ -44,7 +47,10 @@ const none = (req, res, next) => {
     //Save to file
     fs.promises.appendFile(`./logs/access/access-${fileTimestamp}`, JSON.stringify({time: objectTimestamp, endpoint, senderMethod, senderIP}).concat("\n"))
     .then(() => {
-        if (Config.web.debug_mode) { console.log(`\x1b[34mDebug: New request: ${senderMethod}@${endpoint} from ${senderIP}\x1b[0m`) }
+        if (Config.web.debug_mode) { 
+            let debugTimestamp = `[ ${moment().format("HH:mm:ss")} ]`;
+            console.log(`\x1b[34m[ DEBUG ] ${debugTimestamp} New request: ${senderMethod}@${endpoint} from ${senderIP}\x1b[0m`) 
+        }
         next()
     })
     .catch(error => { next() })

@@ -4,14 +4,14 @@ User Endpoints
 Interface for managing users
 */
 const express = require('express');
-const User = require("../db/models/user");
+const User = require("../../db/models/user");
 const router = new express.Router();
 const mongoose = require("mongoose");
 const multer = require('multer');
 const sharp = require('sharp');
 
-const Auth = require("../middleware/auth");
-const config = require("../../config.json");
+const Auth = require("../../middleware/auth");
+const config = require("../../../config.json");
 
 /*
 FETCH USERS

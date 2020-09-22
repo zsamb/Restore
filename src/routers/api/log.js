@@ -6,7 +6,7 @@ const router = new express.Router();
 const fs = require("fs");
 const readline = require('readline');
 
-const Auth = require("../middleware/auth");
+const Auth = require("../../middleware/auth");
 
 /*
 DELETE LOGS

@@ -8,11 +8,11 @@ const archiver = require('archiver');
 const router = new express.Router();
 const fs = require("fs");
 
-const Auth = require("../middleware/auth");
-const Backup = require("../db/models/backup");
-const { parse, validateUrls } = require("../backup/parse");
-const { convert } = require("../utils/bytes");
-const { send } = require("../utils/log");
+const Auth = require("../../middleware/auth");
+const Backup = require("../../db/models/backup");
+const { parse, validateUrls } = require("../../backup/parse");
+const { convert } = require("../../utils/bytes");
+const { send } = require("../../utils/log");
 
 /*
 CREATE BACKUP

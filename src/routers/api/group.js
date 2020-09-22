@@ -4,11 +4,11 @@ Group Endpoints
 Interface for managing groups
 */
 const express = require('express');
-const Group = require("../db/models/group");
+const Group = require("../../db/models/group");
 const router = new express.Router();
 const mongoose = require('mongoose');
 
-const Auth = require("../middleware/auth");
+const Auth = require("../..//middleware/auth");
 
 /*
 FETCH GROUPS

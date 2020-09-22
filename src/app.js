@@ -3,112 +3,91 @@ Main program entry point
 
 Validates and begins restore
 */
-const { auto } = require("async");
-const fs = require("fs");
+const { waterfall } = require("async");
 const mongoose = require("mongoose");
-const cp = require("child_process");
+const fs = require("fs");
 
 const Log = require("./utils/log");
-let URI;
+const Web = require("./services/web");
+const Exit = require("./utils/exit");
 
-auto({
+//Begin initialisation
+waterfall([
 
-    //Check config file is accessible
-    read_config: (callback) => {       
-        Log.send("system", "Checking config file...");  
-        fs.promises.readFile("config.json")
-        .then(config => {
-            Log.send("system", "Config file is available");
+    //Validate config
+    (callback) => {
+        Log.send("system", "Attempting to read config file..");
+        fs.promises.readFile("config.json").then(config => {
+            Log.send("system", "Successfully read config file.");
             callback(null, JSON.parse(config));
-        }, (error) => callback(error.message));
+        }).catch(error => callback(error.message));
     },
 
-    //Connect to mongodb to validate creds
-    connect_mongo: ["read_config", (results, callback) => {
-        const mongo = results.read_config.mongo;
-        const connection = `mongodb://${mongo.user}:${mongo.password}@${mongo.host}:${mongo.port}/${mongo.database}?authSource=${mongo.auth}`;
-
-        Log.send("system", `Validating MongoDB at: ${mongo.host}:${mongo.port}...`);
-        mongoose.connect(connection, {
+    //Validate mongodb
+    (config, callback) => {
+        Log.send("system", "Testing MongoDB connection..");
+        const connectionStr = `mongodb://${config.mongo.user}:${config.mongo.password}@${config.mongo.host}:${config.mongo.port}/${config.mongo.database}?authSource=${config.mongo.auth}`;
+        mongoose.connect(connectionStr, {
             useNewUrlParser: true,
             useUnifiedTopology: true,
             useCreateIndex: true
         }).then(() => {
-            URI = connection;
-            Log.send("system", `Validated MongoDB database: ${mongo.database}`);
-            callback();
+            Log.send("system", "Successfully connected to MongoDB.");
+            callback(null, config, connectionStr);
         }).catch(error => callback(error.message));
-    }],
+    },
 
-    //Check if first run and if so create preinit requirements
-    first_run: ["read_config", (results, callback) => {
-        if ("init" in results.read_config) {
-            Log.send("system", "First run detected, running prerequisites...");
-
-            //Generate token secret
-            const selection = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
-            let secret = "";
-            let length = Math.floor(Math.random() * (80 - 50)) + 50;
-
-            Log.send("system", "Generating token secret");
-            for (let x=0; x <= length; x++) {
-                let rInt = Math.floor(Math.random() * 62);
-                secret = secret + selection[rInt];
+    //Run firstRun tasks if neccessary
+    (config, uriStr, callback) => {
+        if ("init" in config) { 
+            Log.send("system", "Completing first run prerquisites..");
+            Log.send("system", "Generating a random token secret..");
+            const select = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+            let tokenSecret = "";
+            for (let x=0; x <= 30; x++) { 
+                let ranInt = Math.floor(Math.random() * 62);
+                tokenSecret = tokenSecret.concat(select[ranInt]);
             }
-            //Save
-            results.read_config.web.token_secret = secret;
-            delete results.read_config.init;
-            fs.promises.writeFile("config.json", JSON.stringify(results.read_config, null, 4))
+            config.web.token_secret = tokenSecret;
+            delete config.init;
+            fs.promises.writeFile("config.json", JSON.stringify(config, null, 4))
             .then(async () => {
-                Log.send("system", "Secret generated");
-                //Create admin group and user
-                Log.send("system", "Creating admin group and user");
-
+                Log.send("system", "Secret generated.");
+                Log.send("system", "Creating default user and group..");
                 const Group = require("./db/models/group");
+                let defaultGroup = new Group({name: "admin", permissions: ["*"]});
+                await defaultGroup.save();
                 const User = require("./db/models/user");
-
-                let adminGroup = new Group({
-                    name: "admin",
-                    permissions: ["*"]
-                })
-                let adminUser = new User({
-                    username: "admin",
-                    email: "admin@example.com",
-                    group: "admin",
-                    password: "password"
-                })
-                
-                await adminGroup.save();
-                await adminUser.save();
-
-                Log.send("system", "Group and user created");
-                //Close connection
-                mongoose.connection.close();
-                callback();
-
-            }).catch(error => callback(error.message));
-        } else { callback() }
-    }],
-
-    //Start webserver as child
-    start_web: ["connect_mongo", "first_run", (results, callback) => {
-        Log.send("system", "Starting webserver...");
-        try {
-            let web = cp.fork("./src/services/web.js", [URI, JSON.stringify(results.read_config)]);
-            web.on("close", () => {
-                Log.send("system", "Webserver closed", { colour: "FgYellow" })
-                process.exit();
+                let defaultUser = new User({username: "admin", email: "admin@example.com", group: "admin", password: "password"});
+                await defaultUser.save();
+                Log.send("system", "Default user and group created.");
+                callback(null, config, uriStr);
             })
-            callback();
-        } catch (error) { callback(error.message) }
-    }],
+        } else { callback(null, config, uriStr) }
+    }
 
-    //Finished initialisation
-}, (error, results) => {
-    if (error) { 
-        Log.send("system", error, { error: true, colour: "FgRed" });
-        process.exit(5);
+], (error, config, uriStr) => {
+    //Success
+    if (!error) { 
+        Log.send("system", `Initialisation complete`, { colour: "FgGreen" }); 
+        Log.send("system", "Starting webserver..");
+        Web.start(config)
+        .then(httpServer => {
+            
+            //Handle exits
+            Exit.handle(() => {
+                Log.send("system", "Closing..");
+                httpServer.close();
+                mongoose.connection.close();
+            })
+
+        }).catch(error => {
+            Log.send("system", `Failed to start webserver: ${error}`, { error: true, colour: "FgRed" });
+            process.exit(5);
+        })
+    //Failure
     } else { 
-        Log.send("system", "Initialisation successful", { colour: "FgGreen" });
+        Log.send("system", `Failed initialisation: ${error}`, { error: true, colour: "FgRed" });
+        process.exit(5);
     }
 })
