@@ -27,10 +27,16 @@ $(document).ready(function() {
               break;
           }
         } else {
-          if (!document.cookie.match(/^(.*;)?\s*token\s*=\s*[^;]+(.*)?$/)) {
-            document.cookie = "token=" + body['token'] + "; path=/; secure";
-            window.location = '/dash/home';
-          }
+          fetch("/api/httpEnabled")
+          .then(res => {
+            res.json()
+            .then(resJSON => {
+              if (!document.cookie.match(/^(.*;)?\s*token\s*=\s*[^;]+(.*)?$/)) {
+                document.cookie = `token=${body['token']}; path=/; ${resJSON.http ? "" : "secure"}`;
+                window.location = '/dash/home';
+              }
+            })
+          }).catch(error => console.log(error))
         }
       })
     }).catch(err => console.log(err))

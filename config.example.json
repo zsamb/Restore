@@ -17,6 +17,7 @@
     "options": {
         "fileUploadLimit": 1,
         "maximumSources": 5,
-        "maximumTargets": 5
+        "maximumTargets": 5,
+        "http": true
     }
 }

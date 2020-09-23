@@ -70,6 +70,7 @@ waterfall([
     if (!error) { 
         Log.send("system", `Initialisation complete`, { colour: "FgGreen" }); 
         Log.send("system", "Starting webserver..");
+        if (config.options.http == true) { Log.send("system", "HTTP IS ENABLED, THIS IS INSECURE PLEASE USE HTTPS", { colour: "FgYellow" } )}
         Web.start(config)
         .then(httpServer => {
             

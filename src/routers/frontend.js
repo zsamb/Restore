@@ -7,6 +7,16 @@ const Config = require("../../config.json");
 const Auth = require("../middleware/auth");
 const User = require("../db/models/user");
 
+/*
+  Returns the http variable from the config.
+  Auth: none
+*/
+router.get("/api/httpEnabled", async (req, res) => { res.send({http: Config.options.http}) })
+
+/*
+  Allows the user to login, redirects to dash if already
+  Auth: none
+*/
 router.get("/auth/login", async(req, res) => {
   try {
     //Get token from cookie
@@ -24,6 +34,10 @@ router.get("/auth/login", async(req, res) => {
   }
 });
 
+/*
+  Dashboard redirects to /dash/home
+  Auth: cookie
+*/
 router.get("/dash", Auth.cookie, async(req, res) => {
   try {
     res.redirect("/dash/home");
@@ -32,6 +46,10 @@ router.get("/dash", Auth.cookie, async(req, res) => {
   }
 });
 
+/*
+  Displays the dashboard
+  Auth: cookie
+*/
 router.get("/dash/home", Auth.cookie, async(req, res) => {
   try {
     res.render("dash/home", {
