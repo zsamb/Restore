@@ -9,6 +9,7 @@ const router = new express.Router();
 const mongoose = require("mongoose");
 const multer = require('multer');
 const sharp = require('sharp');
+const fs = require("fs");
 
 const Auth = require("../../middleware/auth");
 const config = require("../../../config.json");
@@ -273,7 +274,7 @@ Permissions: authenticated
 */
 router.get("/api/user/me/picture", Auth.user, async (req, res) => {
     try {
-        if (!req.user.picture) { throw new Error() }
+        if (!req.user.picture) { throw new Error("This user does") }
         res.set("Content-Type", "image/png");
         res.send(req.user.picture);
     } catch (error) {
@@ -288,9 +289,17 @@ Permissions: authenticated cookie
 */
 router.get("/api/user/cookie/picture", Auth.cookie, async (req, res) => {
     try {
-        if (!req.user.picture) { throw new Error() }
-        res.set("Content-Type", "image/png");
-        res.send(req.user.picture);
+        if (!req.user.picture) { 
+            fs.promises.readFile("./assets/images/default-pfp.png")
+            .then(image => { 
+                res.set("Content-Type", "image/png");
+                res.send(image);
+            })
+            .catch(error => res.status(400).send({error: true, data: error.message}))
+        } else {
+            res.set("Content-Type", "image/png");
+            res.send(req.user.picture);
+        }
     } catch (error) {
         res.status(400).send({error: true, data: error.message});
     }
@@ -307,8 +316,17 @@ router.get("/api/user/picture/:id", Auth.group, async (req, res) => {
             let user = await User.findById(req.params.id);
             if (!user) { throw new Error("Could not find that user") }
             else {
-                res.set("Content-Type", "image/png");
-                res.status(200).send(user.picture);
+                if (!user.picture) { 
+                    fs.promises.readFile("./assets/images/default-pfp.png")
+                    .then(image => { 
+                        res.set("Content-Type", "image/png");
+                        res.send(image);
+                    })
+                    .catch(error => res.status(400).send({error: true, data: error.message}))
+                } else {
+                    res.set("Content-Type", "image/png");
+                    res.send(user.picture);
+                }
             }
         } else { throw new Error("You have incorrect permissions") }
     } catch (error) {
