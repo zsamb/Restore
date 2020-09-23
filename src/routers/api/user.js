@@ -274,9 +274,17 @@ Permissions: authenticated
 */
 router.get("/api/user/me/picture", Auth.user, async (req, res) => {
     try {
-        if (!req.user.picture) { throw new Error("This user does") }
-        res.set("Content-Type", "image/png");
-        res.send(req.user.picture);
+        if (!req.user.picture) { 
+            fs.promises.readFile("./assets/images/default-pfp.png")
+            .then(image => { 
+                res.set("Content-Type", "image/png");
+                res.send(image);
+            })
+            .catch(error => res.status(400).send({error: true, data: error.message}))
+        } else {
+            res.set("Content-Type", "image/png");
+            res.send(req.user.picture);
+        }
     } catch (error) {
         res.status(400).send({error: true, data: error.message});
     }

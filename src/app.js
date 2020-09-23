@@ -40,8 +40,7 @@ waterfall([
     //Run firstRun tasks if neccessary
     (config, uriStr, callback) => {
         if ("init" in config) { 
-            Log.send("system", "Completing first run prerquisites..");
-            Log.send("system", "Generating a random token secret..");
+            Log.sendMultiple("system", ["Completing first run prerquisites..", "Generating a random token secret.."])
             const select = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
             let tokenSecret = "";
             for (let x=0; x <= 30; x++) { 
