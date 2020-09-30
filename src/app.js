@@ -10,6 +10,7 @@ const fs = require("fs");
 const Log = require("./utils/log");
 const Web = require("./services/web");
 const Exit = require("./utils/exit");
+const Path = require("path");
 
 //Begin initialisation
 waterfall([
@@ -17,7 +18,7 @@ waterfall([
     //Validate config
     (callback) => {
         Log.send("system", "Attempting to read config file..");
-        fs.promises.readFile("config.json").then(config => {
+        fs.promises.readFile(Path.join(__dirname, "../config.json")).then(config => {
             Log.send("system", "Successfully read config file.");
             callback(null, JSON.parse(config));
         }).catch(error => callback(error.message));

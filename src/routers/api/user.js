@@ -10,6 +10,7 @@ const mongoose = require("mongoose");
 const multer = require('multer');
 const sharp = require('sharp');
 const fs = require("fs");
+const Path = require("path");
 
 const Auth = require("../../middleware/auth");
 const config = require("../../../config.json");
@@ -275,7 +276,7 @@ Permissions: authenticated
 router.get("/api/user/me/picture", Auth.user, async (req, res) => {
     try {
         if (!req.user.picture) { 
-            fs.promises.readFile("./assets/images/default-pfp.png")
+            fs.promises.readFile(Path.join(__dirname, "../../../assets/images/default-pfp.png"))
             .then(image => { 
                 res.set("Content-Type", "image/png");
                 res.send(image);

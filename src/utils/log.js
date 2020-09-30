@@ -3,6 +3,7 @@ Logging helper
 
 Handles logging to terminal and file with additional options
 */
+const Path = require("path");
 const fs = require("fs");
 const moment = require("moment");
 
@@ -97,7 +98,7 @@ const _toFile = (type, message, options) => {
     return new Promise((resolve, reject) => {
         let fileTimestamp   = moment().format("YYYY-MM-DD").concat(".log");
         let objectTimestamp = moment().format("x");
-        fs.appendFile(`./logs/${type}/${type}-${fileTimestamp}`, JSON.stringify({error: options.error ? true : false, time: objectTimestamp, message: message}).concat("\n"), (error) => {
+        fs.appendFile(Path.join(__dirname, `../../logs/${type}/${type}-${fileTimestamp}`), JSON.stringify({error: options.error ? true : false, time: objectTimestamp, message: message}).concat("\n"), (error) => {
             if (error) { reject(error.message) }
             else { resolve ("Log appended to file") }
         })

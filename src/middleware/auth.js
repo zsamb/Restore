@@ -7,6 +7,7 @@
 const jwt = require('jsonwebtoken');
 const fs = require("fs");
 const moment = require("moment");
+const Path = require("path");
 
 const User = require("../db/models/user");
 const Group = require("../db/models/group");
@@ -23,7 +24,7 @@ const createLog = (request, auth) => {
         const senderMethod = request.method;
 
         //Save to file
-        fs.promises.appendFile(`./logs/access/access-${fileTimestamp}`, JSON.stringify({time: objectTimestamp, user: (auth ? request.user.username : "Unauthenticated"), endpoint, senderMethod, senderIP}).concat("\n"))
+        fs.promises.appendFile(Path.join(__dirname, `../../logs/access/access-${fileTimestamp}`), JSON.stringify({time: objectTimestamp, user: (auth ? request.user.username : "Unauthenticated"), endpoint, senderMethod, senderIP}).concat("\n"))
         .then(() => {
             if (Config.web.debug_mode) {
                 let debugTimestamp = `[ ${moment().format("HH:mm:ss")} ]`;
@@ -45,7 +46,7 @@ const none = (req, res, next) => {
     const senderMethod = req.method;
 
     //Save to file
-    fs.promises.appendFile(`./logs/access/access-${fileTimestamp}`, JSON.stringify({time: objectTimestamp, endpoint, senderMethod, senderIP}).concat("\n"))
+    fs.promises.appendFile(Path.join(__dirname, `../../logs/access/access-${fileTimestamp}`), JSON.stringify({time: objectTimestamp, endpoint, senderMethod, senderIP}).concat("\n"))
     .then(() => {
         if (Config.web.debug_mode) { 
             let debugTimestamp = `[ ${moment().format("HH:mm:ss")} ]`;

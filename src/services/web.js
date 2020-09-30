@@ -36,7 +36,7 @@ const start = (config) => {
             app.use(cookieParser());
             //Register routers
             Log.send("system", "Registering routers..");
-            fs.promises.readdir("./src/routers")
+            fs.promises.readdir(path.join(__dirname, "../routers"))
             .then(files => {
                 files.forEach(file => {
                     if (file.split(".")[1] == "js") { 
@@ -49,7 +49,7 @@ const start = (config) => {
                     }
                 })
                 Log.send("system", "Registering API routers..");
-                fs.promises.readdir("./src/routers/api")
+                fs.promises.readdir(path.join(__dirname, "../routers/api"))
                 .then(files => {
                     files.forEach(file => {
                         if (file.split(".")[1] == "js") { 
