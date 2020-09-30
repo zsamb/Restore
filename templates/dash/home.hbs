@@ -129,16 +129,16 @@
               <div class='form-row popup-row'>
                 <div class='form-input-container'>
                   <label for='account-first-name-edit'>First Name:</label>
-                  <input id='account-first-name-edit' data-default-value='{{user_first_name}}' value='{{user_first_name}}'></input>
+                  <input id='account-first-name-edit' name='first_name' value='{{user_first_name}}'></input>
                 </div>
                 <div class='form-input-container'>
                   <label for='account-last-name-edit'>Last Name:</label>
-                  <input id='account-last-name-edit' data-default-value='{{user_last_name}}' value='{{user_last_name}}'></input>
+                  <input id='account-last-name-edit' name='last_name' value='{{user_last_name}}'></input>
                 </div>
               </div>
               <div class='form-input-container'>
                 <label for='account-email-edit'>E-mail Address:</label>
-                <input type='email' id='account-email-edit' data-default-value='{{user_email}}' value='{{user_email}}'></input>
+                <input type='email' id='account-email-edit' name='email' value='{{user_email}}'></input>
               </div>
             </div>
 
@@ -206,8 +206,6 @@
       $("#sidebar-minimize-icon").toggleClass("fa-chevron-left")
       $("#sidebar-minimize-icon").toggleClass("fa-chevron-right")
     })
-
-
   })
   </script>
 </body>
