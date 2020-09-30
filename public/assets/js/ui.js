@@ -12,5 +12,6 @@ function cancelLoadingOverlay() {
   }
   if (document.getElementById('loading-popup').classList.contains('visible-loading-popup') == true) {
     $("#loading-popup").toggleClass("visible-loading-popup")
+    $("#loading-popup p").remove();
   }
 }
