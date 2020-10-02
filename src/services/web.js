@@ -65,11 +65,18 @@ const start = (config) => {
 
                                 }
                             })
-                            //Create and manage server
-                            try {
 
+                            try {
+                                //Create server and wrap socket.io
                                 Log.send("system", "Starting http server..");
                                 const httpServer = http.createServer(app);
+                                const io = require("socket.io")(httpServer);
+
+                                //404
+                                app.get("*", (req, res) => {
+                                    res.render("404.hbs")
+                                })
+
                                 httpServer.on("error", error => {
                                     reject(error.message)
                                 });
