@@ -6,12 +6,13 @@ Fetches resource usage
 const osu = require("node-os-utils");
 const cpu = osu.cpu;
 const mem = osu.mem;
-const os  = osu.os;
+const os = osu.os;
 
 const fetchCPU = () => {
     return new Promise((resolve, reject) => {
         cpu.usage(500)
-            .then(cpuPercent => { resolve({cpuPercent, model: cpu.model().trim()})
+            .then(cpuPercent => {
+                resolve({cpuPercent, model: cpu.model().trim()})
             }).catch(error => reject(error))
     })
 }
@@ -19,7 +20,8 @@ const fetchCPU = () => {
 const fetchMem = () => {
     return new Promise((resolve, reject) => {
         mem.info()
-            .then(info => { resolve(info)
+            .then(info => {
+                resolve(info)
             }).catch(error => reject(error))
     })
 }
@@ -51,4 +53,4 @@ const fetchAll = () => {
     })
 }
 
-module.exports = { fetchCPU, fetchMem, fetchSys, fetchAll }
+module.exports = {fetchCPU, fetchMem, fetchSys, fetchAll}

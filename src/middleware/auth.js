@@ -16,7 +16,7 @@ const Config = require("../../config.json");
 //Access logging
 const createLog = (request, auth) => {
     return new Promise((resolve, reject) => {
-        const fileTimestamp   = moment().format("YYYY-MM-DD").concat(".log");
+        const fileTimestamp = moment().format("YYYY-MM-DD").concat(".log");
         const objectTimestamp = moment().format("x");
 
         const senderIP = request.headers["x-real-ip"] || request.ip;
@@ -24,21 +24,27 @@ const createLog = (request, auth) => {
         const senderMethod = request.method;
 
         //Save to file
-        fs.promises.appendFile(Path.join(__dirname, `../../logs/access/access-${fileTimestamp}`), JSON.stringify({time: objectTimestamp, user: (auth ? request.user.username : "Unauthenticated"), endpoint, senderMethod, senderIP}).concat("\n"))
-        .then(() => {
-            if (Config.web.debug_mode) {
-                let debugTimestamp = `[ ${moment().format("HH:mm:ss")} ]`;
-                console.log(`\x1b[34m[ DEBUG ] ${debugTimestamp} New request: ${senderMethod}@${endpoint} from ${auth ? request.user.username : "Unauthenticated"}@${senderIP}\x1b[0m`) 
-            }
-            resolve()
-        })
-        .catch(error => reject(error.message))
+        fs.promises.appendFile(Path.join(__dirname, `../../logs/access/access-${fileTimestamp}`), JSON.stringify({
+            time: objectTimestamp,
+            user: (auth ? request.user.username : "Unauthenticated"),
+            endpoint,
+            senderMethod,
+            senderIP
+        }).concat("\n"))
+            .then(() => {
+                if (Config.web.debug_mode) {
+                    let debugTimestamp = `[ ${moment().format("HH:mm:ss")} ]`;
+                    console.log(`\x1b[34m[ DEBUG ] ${debugTimestamp} New request: ${senderMethod}@${endpoint} from ${auth ? request.user.username : "Unauthenticated"}@${senderIP}\x1b[0m`)
+                }
+                resolve()
+            })
+            .catch(error => reject(error.message))
     })
 }
 
 //Log no-auth requests
 const none = (req, res, next) => {
-    const fileTimestamp   = moment().format("YYYY-MM-DD").concat(".log");
+    const fileTimestamp = moment().format("YYYY-MM-DD").concat(".log");
     const objectTimestamp = moment().format("x");
 
     const senderIP = req.headers["x-real-ip"] || req.ip;
@@ -46,15 +52,22 @@ const none = (req, res, next) => {
     const senderMethod = req.method;
 
     //Save to file
-    fs.promises.appendFile(Path.join(__dirname, `../../logs/access/access-${fileTimestamp}`), JSON.stringify({time: objectTimestamp, endpoint, senderMethod, senderIP}).concat("\n"))
-    .then(() => {
-        if (Config.web.debug_mode) { 
-            let debugTimestamp = `[ ${moment().format("HH:mm:ss")} ]`;
-            console.log(`\x1b[34m[ DEBUG ] ${debugTimestamp} New request: ${senderMethod}@${endpoint} from ${senderIP}\x1b[0m`) 
-        }
-        next()
-    })
-    .catch(error => { next() })
+    fs.promises.appendFile(Path.join(__dirname, `../../logs/access/access-${fileTimestamp}`), JSON.stringify({
+        time: objectTimestamp,
+        endpoint,
+        senderMethod,
+        senderIP
+    }).concat("\n"))
+        .then(() => {
+            if (Config.web.debug_mode) {
+                let debugTimestamp = `[ ${moment().format("HH:mm:ss")} ]`;
+                console.log(`\x1b[34m[ DEBUG ] ${debugTimestamp} New request: ${senderMethod}@${endpoint} from ${senderIP}\x1b[0m`)
+            }
+            next()
+        })
+        .catch(error => {
+            next()
+        })
 }
 
 //Authenticates a web token and attaches the verified user to the request object
@@ -64,12 +77,14 @@ const user = async (req, res, next) => {
         //Authenticate
         const token = req.header('Authorization').replace('Bearer ', '');
         const decode = jwt.verify(token, Config.web.token_secret);
-        const user = await User.findOne({ _id: decode._id, 'tokens.token': token });
-        if (!user) { throw new Error() }
+        const user = await User.findOne({_id: decode._id, 'tokens.token': token});
+        if (!user) {
+            throw new Error()
+        }
 
         //Attach token and user data
         req.token = token;
-        req.user  = user;
+        req.user = user;
         next();
         createLog(req, true);
 
@@ -83,15 +98,19 @@ const cookie = async (req, res, next) => {
     try {
         //Get token from cookie
         const token = req.cookies.token || undefined;
-        if (!token) { throw new Error() }
+        if (!token) {
+            throw new Error()
+        }
 
         const decodedToken = jwt.verify(token, Config.web.token_secret);
-        const user = await User.findOne({_id: decodedToken._id, 'tokens.token': token });
-        if (!user) { throw new Error() }
+        const user = await User.findOne({_id: decodedToken._id, 'tokens.token': token});
+        if (!user) {
+            throw new Error()
+        }
 
         //Attach token and user data
         req.token = token;
-        req.user  = user;
+        req.user = user;
 
         next();
         createLog(req, true);
@@ -106,14 +125,16 @@ const group = async (req, res, next) => {
     try {
         const token = req.header('Authorization').replace('Bearer ', '');
         const decode = jwt.verify(token, Config.web.token_secret);
-        const user = await User.findOne({ _id: decode._id, "tokens.token": token });
-        if (!user) { throw new Error() }
-        else {
+        const user = await User.findOne({_id: decode._id, "tokens.token": token});
+        if (!user) {
+            throw new Error()
+        } else {
             const group = await Group.findOne({name: user.group});
-            if (!group) { throw new Error() }
-            else {
+            if (!group) {
+                throw new Error()
+            } else {
                 req.token = token;
-                req.user  = user;
+                req.user = user;
                 req.group = group;
                 next();
                 createLog(req, true);
@@ -125,4 +146,4 @@ const group = async (req, res, next) => {
     }
 }
 
-module.exports = { user , group, none, cookie }
+module.exports = {user, group, none, cookie}

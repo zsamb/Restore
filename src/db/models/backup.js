@@ -18,7 +18,9 @@ const backupSchema = new mongoose.Schema({
         type: [String],
         required: [true, "A backup source is required"],
         validate(sources) {
-            if (sources.length < 1 || sources.length > Config.options.maximumSources) { throw new Error("You have too many/little sources") }
+            if (sources.length < 1 || sources.length > Config.options.maximumSources) {
+                throw new Error("You have too many/little sources")
+            }
         }
     },
     targets: {
@@ -27,7 +29,9 @@ const backupSchema = new mongoose.Schema({
         validate(targets) {
             //Limit to one target (v1)
             //if (targets.length != 1) { throw new Error("You have too many/little targets") }
-            if (targets.length < 1 || targets.length > Config.options.maximumTargets) { throw new Error("You have too many/little targets") }
+            if (targets.length < 1 || targets.length > Config.options.maximumTargets) {
+                throw new Error("You have too many/little targets")
+            }
         }
     },
     size: {
@@ -40,7 +44,9 @@ const backupSchema = new mongoose.Schema({
         unique: true,
         sparse: true,
         validate(alias) {
-            if (alias.length < 4) { throw new Error("Alias needs to be a minimum of 4 characters")}
+            if (alias.length < 4) {
+                throw new Error("Alias needs to be a minimum of 4 characters")
+            }
         }
     },
     status: {
@@ -48,17 +54,17 @@ const backupSchema = new mongoose.Schema({
         trim: true,
         default: "Pending"
     }
-}, { timestamps: true })
+}, {timestamps: true})
 
 //Make uniqueness error messages understandable
-backupSchema.post('save', function(error, doc, next) {
+backupSchema.post('save', function (error, doc, next) {
     if (error.name === 'MongoError' && error.code === 11000) {
-      let indexIndex = error.message.indexOf("index:");
-      let indexDup = error.message.indexOf("dup key");
-      let errorKey = error.message.substring(indexIndex + 6, indexDup - 3).trim();
-      next(new Error(`The ${errorKey} ${doc[errorKey]} is already in use.`));
+        let indexIndex = error.message.indexOf("index:");
+        let indexDup = error.message.indexOf("dup key");
+        let errorKey = error.message.substring(indexIndex + 6, indexDup - 3).trim();
+        next(new Error(`The ${errorKey} ${doc[errorKey]} is already in use.`));
     } else {
-      next(error);
+        next(error);
     }
 });
 

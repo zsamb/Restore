@@ -21,7 +21,9 @@ const start = (config) => {
             app.use((error, req, res, next) => {
                 if (error instanceof SyntaxError && error.status >= 400 && error.status < 500 && error.message.indexOf("JSON") !== -1) {
                     res.status(400).send({error: true, data: "Invalid JSON body"});
-                } else { next() }
+                } else {
+                    next()
+                }
             })
             //Trust proxy if behind proxy
             if (config.web.proxy) {
@@ -37,46 +39,55 @@ const start = (config) => {
             //Register routers
             Log.send("system", "Registering routers..");
             fs.promises.readdir(path.join(__dirname, "../routers"))
-            .then(files => {
-                files.forEach(file => {
-                    if (file.split(".")[1] == "js") { 
-                        let router = require(`../routers/${file}`);
-                        app.use(router);
-                        if (config.web.debug_mode) { 
-                            let debugTimestamp = `[ ${moment().format("HH:mm:ss")} ]`;
-                            console.log(`\x1b[34m[ DEBUG ] ${debugTimestamp} Loaded ${file}\x1b[0m`);
-                        };
-                    }
-                })
-                Log.send("system", "Registering API routers..");
-                fs.promises.readdir(path.join(__dirname, "../routers/api"))
                 .then(files => {
                     files.forEach(file => {
-                        if (file.split(".")[1] == "js") { 
-                            let router = require(`../routers/api/${file}`);
+                        if (file.split(".")[1] == "js") {
+                            let router = require(`../routers/${file}`);
                             app.use(router);
                             if (config.web.debug_mode) {
                                 let debugTimestamp = `[ ${moment().format("HH:mm:ss")} ]`;
-                                console.log(`\x1b[34m[ DEBUG ] ${debugTimestamp} Loaded ${file}\x1b[0m`)
-                            };
+                                console.log(`\x1b[34m[ DEBUG ] ${debugTimestamp} Loaded ${file}\x1b[0m`);
+                            }
+
                         }
                     })
-                    //Create and manage server
-                    try {
+                    Log.send("system", "Registering API routers..");
+                    fs.promises.readdir(path.join(__dirname, "../routers/api"))
+                        .then(files => {
+                            files.forEach(file => {
+                                if (file.split(".")[1] == "js") {
+                                    let router = require(`../routers/api/${file}`);
+                                    app.use(router);
+                                    if (config.web.debug_mode) {
+                                        let debugTimestamp = `[ ${moment().format("HH:mm:ss")} ]`;
+                                        console.log(`\x1b[34m[ DEBUG ] ${debugTimestamp} Loaded ${file}\x1b[0m`)
+                                    }
 
-                        Log.send("system", "Starting http server..");
-                        const httpServer = http.createServer(app);
-                        httpServer.on("error", error => { reject(error.message) });
-                        httpServer.listen(config.web.port, () => { 
-                            Log.send("system", "Webserver started", { colour: "FgGreen" });
-                            resolve(httpServer);
-                        });
+                                }
+                            })
+                            //Create and manage server
+                            try {
 
-                    } catch (error) { reject(error.message) }
+                                Log.send("system", "Starting http server..");
+                                const httpServer = http.createServer(app);
+                                httpServer.on("error", error => {
+                                    reject(error.message)
+                                });
+                                httpServer.listen(config.web.port, () => {
+                                    Log.send("system", "Webserver started", {colour: "FgGreen"});
+                                    resolve(httpServer);
+                                });
+
+                            } catch (error) {
+                                reject(error.message)
+                            }
+                        }).catch(error => reject(error.message));
                 }).catch(error => reject(error.message));
-            }).catch(error => reject(error.message));
-        } catch (error) { reject(error.message) };
+        } catch (error) {
+            reject(error.message)
+        }
+
     })
 }
 
-module.exports = { start }
+module.exports = {start}

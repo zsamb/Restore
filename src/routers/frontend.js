@@ -11,56 +11,62 @@ const User = require("../db/models/user");
   Returns the http variable from the config.
   Auth: none
 */
-router.get("/api/httpEnabled", async (req, res) => { res.send({http: Config.options.http}) })
+router.get("/api/httpEnabled", async (req, res) => {
+    res.send({http: Config.options.http})
+})
 
 /*
   Allows the user to login, redirects to dash if already
   Auth: none
 */
-router.get("/auth/login", async(req, res) => {
-  try {
-    //Get token from cookie
-    const token = req.cookies.token || undefined;
-    if (!token) { res.render("auth/login") }
-    else {
-      //Validate and get user
-      const decodedToken = jwt.verify(token, Config.web.token_secret);
-      const user = await User.findOne({_id: decodedToken._id, 'tokens.token': token });
-      if (!user) { res.render("auth/login") }
-      else { res.redirect("/dash/home") }
+router.get("/auth/login", async (req, res) => {
+    try {
+        //Get token from cookie
+        const token = req.cookies.token || undefined;
+        if (!token) {
+            res.render("auth/login")
+        } else {
+            //Validate and get user
+            const decodedToken = jwt.verify(token, Config.web.token_secret);
+            const user = await User.findOne({_id: decodedToken._id, 'tokens.token': token});
+            if (!user) {
+                res.render("auth/login")
+            } else {
+                res.redirect("/dash/home")
+            }
+        }
+    } catch (error) {
+        res.status(500).send({error: true, data: error.message});
     }
-  } catch (error) {
-    res.status(500).send({error: true, data: error.message});
-  }
 });
 
 /*
   Dashboard redirects to /dash/home
   Auth: cookie
 */
-router.get("/dash", Auth.cookie, async(req, res) => {
-  try {
-    res.redirect("/dash/home");
-  } catch (error) {
-    res.status(500).send({error: true, data: error.message});
-  }
+router.get("/dash", Auth.cookie, async (req, res) => {
+    try {
+        res.redirect("/dash/home");
+    } catch (error) {
+        res.status(500).send({error: true, data: error.message});
+    }
 });
 
 /*
   Displays the dashboard
   Auth: cookie
 */
-router.get("/dash/home", Auth.cookie, async(req, res) => {
-  try {
-    res.render("dash/home", {
-      user_first_name: req.user.first_name,
-      user_last_name: req.user.last_name,
-      user_email: req.user.email,
-      user_role: req.user.job_title
-    });
-  } catch (error) {
-    res.status(500).send({error: true, data: error.message});
-  }
+router.get("/dash/home", Auth.cookie, async (req, res) => {
+    try {
+        res.render("dash/home", {
+            user_first_name: req.user.first_name,
+            user_last_name: req.user.last_name,
+            user_email: req.user.email,
+            user_role: req.user.job_title
+        });
+    } catch (error) {
+        res.status(500).send({error: true, data: error.message});
+    }
 });
 
 module.exports = router;

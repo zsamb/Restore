@@ -25,7 +25,9 @@ router.get("/api/users", Auth.group, async (req, res) => {
         if (req.group.permissions.includes("view_user")) {
             let users = await User.find({});
             res.status(200).send(users);
-        } else { throw new Error("You have incorrect permissions") }
+        } else {
+            throw new Error("You have incorrect permissions")
+        }
     } catch (error) {
         res.status(400).send({error: true, data: error.message})
     }
@@ -35,13 +37,18 @@ FETCH USER BY ID
 Fetches user by its id
 Permissions: view_user
 */
-router.get("/api/user/get/:id", Auth.group, async (req, res) => { 
+router.get("/api/user/get/:id", Auth.group, async (req, res) => {
     try {
         if (req.group.permissions.includes("view_user")) {
             let user = await User.findById(req.params.id);
-            if (!user) { throw new Error("Could not find that user")}
-            else { res.status(200).send({user}) }
-        } else { throw new Error("You have incorrect permissions") }
+            if (!user) {
+                throw new Error("Could not find that user")
+            } else {
+                res.status(200).send({user})
+            }
+        } else {
+            throw new Error("You have incorrect permissions")
+        }
     } catch (error) {
         res.status(400).send({error: true, data: error.message})
     }
@@ -51,15 +58,17 @@ CREATE USER
 Create new user
 Permissions: create_user
 */
-router.post("/api/user", Auth.group ,async (req, res) => {
+router.post("/api/user", Auth.group, async (req, res) => {
     try {
-        if (req.group.permissions.includes("create_user")) { 
+        if (req.group.permissions.includes("create_user")) {
             const user = new User(req.body);
             await user.save();
             const token = await user.newAuthToken();
             res.status(201).send({user, token});
-        } else { throw new Error("You have incorrect permissions") }
-    } catch (error) { 
+        } else {
+            throw new Error("You have incorrect permissions")
+        }
+    } catch (error) {
         res.status(400).send({error: true, data: error.message})
     }
 })
@@ -78,13 +87,17 @@ Permissions: username and password
 */
 router.post("/api/user/login", Auth.none, async (req, res) => {
     try {
-        if (!req.body.username) { throw new Error("Please provide a username") }
-        if (!req.body.password) { throw new Error("Please provide a password") }
+        if (!req.body.username) {
+            throw new Error("Please provide a username")
+        }
+        if (!req.body.password) {
+            throw new Error("Please provide a password")
+        }
 
         const user = await User.findWithCredentials(req.body.username, req.body.password);
 
         const token = await user.newAuthToken();
-        res.status(200).send({ user, token });
+        res.status(200).send({user, token});
     } catch (error) {
         res.status(400).send({error: true, data: error.message});
     }
@@ -97,7 +110,9 @@ Permissions: authentication token
 router.post("/api/user/logout", Auth.user, async (req, res) => {
     try {
         //Recreate array with tokens that werent in the request
-        req.user.tokens = req.user.tokens.filter((token) => {  return token.token != req.token });
+        req.user.tokens = req.user.tokens.filter((token) => {
+            return token.token != req.token
+        });
         await req.user.save();
 
         res.status(200).send();
@@ -129,28 +144,37 @@ router.patch("/api/user/update/:id", Auth.group, async (req, res) => {
     try {
         if (req.group.permissions.includes("update_user")) {
             let user = await User.findById(req.params.id);
-            if (!user) { throw new Error("Could not find that user") }
-            else {
-                
+            if (!user) {
+                throw new Error("Could not find that user")
+            } else {
+
                 //Check all updates are valid
                 const updates = Object.keys(req.body);
-                if (updates.length < 1) { throw new Error("No updates were sent") }
+                if (updates.length < 1) {
+                    throw new Error("No updates were sent")
+                }
 
                 const validUpdates = ["username", "email", "password", "group", "first_name", "last_name", "job_title"];
                 const validRequest = updates.every(update => validUpdates.includes(update));
 
-                if (!validRequest) { throw new Error(`Invalid update`)};
+                if (!validRequest) {
+                    throw new Error(`Invalid update`)
+                }
+                ;
                 //Update user
                 const user = await User.findById(req.params.id);
-                if (!user) { throw new Error("Could not find that user") }
-                else {
+                if (!user) {
+                    throw new Error("Could not find that user")
+                } else {
                     updates.forEach(update => user[update] = req.body[update]);
                     await user.save();
                     res.status(200).send(user);
                 }
             }
 
-        } else { throw new Error("You have incorrect permissions") }
+        } else {
+            throw new Error("You have incorrect permissions")
+        }
     } catch (error) {
         res.status(400).send({error: true, data: error.message});
     }
@@ -162,14 +186,19 @@ Permissions: authenticated
 */
 router.patch("/api/user/me/update", Auth.user, async (req, res) => {
     try {
-            
+
         //Check all updates are valid
         const updates = Object.keys(req.body);
-        if (updates.length < 1) { throw new Error("No updates were sent") }
+        if (updates.length < 1) {
+            throw new Error("No updates were sent")
+        }
 
         const validUpdates = ["username", "email", "password", "group", "first_name", "last_name", "job_title"];
         const validRequest = validUpdates.every(update => validUpdates.includes(update));
-        if (!validRequest) { throw new Error("Invalid updates")};
+        if (!validRequest) {
+            throw new Error("Invalid updates")
+        }
+        ;
         //Update user
         updates.forEach(update => req.user[update] = req.body[update]);
         await req.user.save();
@@ -190,11 +219,16 @@ router.patch("/api/user/cookie/update", Auth.cookie, async (req, res) => {
 
         //Check all updates are valid
         const updates = Object.keys(req.body);
-        if (updates.length < 1) { throw new Error("No updates were sent") }
+        if (updates.length < 1) {
+            throw new Error("No updates were sent")
+        }
 
         const validUpdates = ["username", "email", "password", "group", "first_name", "last_name", "job_title"];
         const validRequest = validUpdates.every(update => validUpdates.includes(update));
-        if (!validRequest) { throw new Error("Invalid updates")};
+        if (!validRequest) {
+            throw new Error("Invalid updates")
+        }
+        ;
         //Update user
         updates.forEach(update => req.user[update] = req.body[update]);
         await req.user.save();
@@ -214,12 +248,15 @@ router.delete("/api/user/:id", Auth.group, async (req, res) => {
     try {
         if (req.group.permissions.includes("delete_user")) {
             const user = await User.findById(req.params.id);
-            if (!user) { throw new Error("Could not find that user") }
-            else {
+            if (!user) {
+                throw new Error("Could not find that user")
+            } else {
                 await user.remove();
                 res.status(200).send();
             }
-        } else { throw new Error("You have incorrect permissions")}
+        } else {
+            throw new Error("You have incorrect permissions")
+        }
     } catch (error) {
         res.status(400).send({error: true, data: error.message});
     }
@@ -236,7 +273,7 @@ const upload = multer({
             return callback(new Error("Please upload an image"));
         }
         callback(undefined, true);
-    }  
+    }
 })
 
 /*
@@ -245,16 +282,17 @@ Uploads a profile pic to the user who is logged in
 Permissions: authenticated
 */
 router.post("/api/user/me/picture", Auth.user, upload.single("picture"), async (req, res) => {
-    if (req.file == undefined) { res.status(400).send({error: true, data: "Please upload an image"})}
-    else {
-        const picBuffer = await sharp(req.file.buffer).resize({ width: 250, height: 250 }).png().toBuffer();
+    if (req.file == undefined) {
+        res.status(400).send({error: true, data: "Please upload an image"})
+    } else {
+        const picBuffer = await sharp(req.file.buffer).resize({width: 250, height: 250}).png().toBuffer();
         req.user.picture = picBuffer;
         await req.user.save();
-        
+
         res.status(200).send();
     }
 }, (error, req, res, next) => {
-    res.status(400).send({ error: true, data: error.message });
+    res.status(400).send({error: true, data: error.message});
 })
 
 /*
@@ -275,13 +313,13 @@ Permissions: authenticated
 */
 router.get("/api/user/me/picture", Auth.user, async (req, res) => {
     try {
-        if (!req.user.picture) { 
+        if (!req.user.picture) {
             fs.promises.readFile(Path.join(__dirname, "../../../assets/images/default-pfp.png"))
-            .then(image => { 
-                res.set("Content-Type", "image/png");
-                res.send(image);
-            })
-            .catch(error => res.status(400).send({error: true, data: error.message}))
+                .then(image => {
+                    res.set("Content-Type", "image/png");
+                    res.send(image);
+                })
+                .catch(error => res.status(400).send({error: true, data: error.message}))
         } else {
             res.set("Content-Type", "image/png");
             res.send(req.user.picture);
@@ -298,13 +336,13 @@ Permissions: authenticated cookie
 */
 router.get("/api/user/cookie/picture", Auth.cookie, async (req, res) => {
     try {
-        if (!req.user.picture) { 
+        if (!req.user.picture) {
             fs.promises.readFile("./assets/images/default-pfp.png")
-            .then(image => { 
-                res.set("Content-Type", "image/png");
-                res.send(image);
-            })
-            .catch(error => res.status(400).send({error: true, data: error.message}))
+                .then(image => {
+                    res.set("Content-Type", "image/png");
+                    res.send(image);
+                })
+                .catch(error => res.status(400).send({error: true, data: error.message}))
         } else {
             res.set("Content-Type", "image/png");
             res.send(req.user.picture);
@@ -323,21 +361,24 @@ router.get("/api/user/picture/:id", Auth.group, async (req, res) => {
     try {
         if (req.group.permissions.includes("view_user")) {
             let user = await User.findById(req.params.id);
-            if (!user) { throw new Error("Could not find that user") }
-            else {
-                if (!user.picture) { 
+            if (!user) {
+                throw new Error("Could not find that user")
+            } else {
+                if (!user.picture) {
                     fs.promises.readFile("./assets/images/default-pfp.png")
-                    .then(image => { 
-                        res.set("Content-Type", "image/png");
-                        res.send(image);
-                    })
-                    .catch(error => res.status(400).send({error: true, data: error.message}))
+                        .then(image => {
+                            res.set("Content-Type", "image/png");
+                            res.send(image);
+                        })
+                        .catch(error => res.status(400).send({error: true, data: error.message}))
                 } else {
                     res.set("Content-Type", "image/png");
                     res.send(user.picture);
                 }
             }
-        } else { throw new Error("You have incorrect permissions") }
+        } else {
+            throw new Error("You have incorrect permissions")
+        }
     } catch (error) {
         res.status(400).send({error: true, data: error.message});
     }

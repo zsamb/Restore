@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
-const { isEmail } = require('validator');
-const { hash, compare } = require("bcrypt");
+const {isEmail} = require('validator');
+const {hash, compare} = require("bcrypt");
 const jwt = require('jsonwebtoken');
 const Group = require("./group");
 
@@ -65,37 +65,39 @@ const userSchema = new mongoose.Schema({
         type: Buffer
     }
 
-}, { timestamps: true });
+}, {timestamps: true});
 
 //Hash passwords before they are saved
 //Check group exists
-userSchema.pre("save", async function(next) {
+userSchema.pre("save", async function (next) {
     if (this.isModified("password")) {
         this.password = await hash(this.password, 11)
     }
     if (this.isModified("group")) {
         let group = await Group.findOne({name: this.group});
-        if (!group) {   throw new Error("That group does not exist") }
+        if (!group) {
+            throw new Error("That group does not exist")
+        }
     }
     next()
 })
 
 //Make uniqueness error messages understandable
-userSchema.post('save', function(error, doc, next) {
+userSchema.post('save', function (error, doc, next) {
     if (error.name === 'MongoError' && error.code === 11000) {
-      let indexIndex = error.message.indexOf("index:");
-      let indexDup = error.message.indexOf("dup key");
-      let errorKey = error.message.substring(indexIndex + 6, indexDup - 3).trim();
-      next(new Error(`The ${errorKey} ${doc[errorKey]} is already in use.`));
+        let indexIndex = error.message.indexOf("index:");
+        let indexDup = error.message.indexOf("dup key");
+        let errorKey = error.message.substring(indexIndex + 6, indexDup - 3).trim();
+        next(new Error(`The ${errorKey} ${doc[errorKey]} is already in use.`));
     } else {
-      next(error);
+        next(error);
     }
 });
 
 //Generate auth token
 userSchema.methods.newAuthToken = async function () {
-    const token = jwt.sign({ _id: this._id.toString() }, Config.web.token_secret);
-    this.tokens = this.tokens.concat({ token })
+    const token = jwt.sign({_id: this._id.toString()}, Config.web.token_secret);
+    this.tokens = this.tokens.concat({token})
 
     await this.save()
     return token
@@ -112,12 +114,16 @@ userSchema.methods.toJSON = function () {
 
 //Fetch user with username and password
 userSchema.statics.findWithCredentials = async (username, password) => {
-    const user = await User.findOne({ username });
-    if (!user) { throw new Error('Failed to login: Could not find user.') }
+    const user = await User.findOne({username});
+    if (!user) {
+        throw new Error('Failed to login: Could not find user.')
+    }
 
     //Check password matches
     const isMatch = await compare(password, user.password);
-    if (!isMatch) { throw new Error('Failed to login: Invalid password.') }
+    if (!isMatch) {
+        throw new Error('Failed to login: Invalid password.')
+    }
     return user;
 }
 
