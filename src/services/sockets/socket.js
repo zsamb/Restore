@@ -7,6 +7,7 @@ const Log = require("../../utils/log");
 const Config = require("../../../config.json");
 const User = require("../../db/models/user");
 const Group = require("../../db/models/group");
+const { connections } = require("mongoose");
 
 //Handle new socket connections
 const handler = (io, options) => {
@@ -25,6 +26,9 @@ const handler = (io, options) => {
                     await Log.send("system", `Loaded ${files.length} socket events.`)
                     //Event handler
                     io.on("connection", socket => {
+                        //Add connection to connection tracker
+                        options.connections.add(socket);
+                        socket.on("close", () => connections.delete(socket));
                         for (const [eventName, eventFunction] of Object.entries(events)) {
                             socket.on(eventName, body => {
                                 parse(body)

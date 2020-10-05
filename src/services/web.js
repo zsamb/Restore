@@ -13,7 +13,7 @@ const Log = require("../utils/log");
 const Socket = require("./sockets/socket.js");
 
 //Start webserver
-const start = (config) => {
+const start = (config, connections) => {
     return new Promise((resolve, reject) => {
         try {
             //Configure express
@@ -74,7 +74,7 @@ const start = (config) => {
                                 const io = require("socket.io")(httpServer);
 
                                 //Handle socket connections and events
-                                Socket.handler(io, {})
+                                Socket.handler(io, {connections})
                                     .then(() => {
                                         //404
                                         app.get("*", (req, res) => {
@@ -86,7 +86,7 @@ const start = (config) => {
                                         });
                                         httpServer.listen(config.web.port, () => {
                                             Log.send("system", "Webserver started", {colour: "FgGreen"});
-                                            resolve(httpServer);
+                                            resolve({http: httpServer, io});
                                         });
                                     }).catch(error => reject(error))
                             } catch (error) {
