@@ -8,11 +8,14 @@ const Auth = require("../middleware/auth");
 const User = require("../db/models/user");
 
 /*
-  Returns the http variable from the config.
-  Auth: none
+  Redirct / to dash
 */
-router.get("/api/httpEnabled", async (req, res) => {
-    res.send({http: Config.options.http})
+router.get("/", (req, res) => {
+    try {
+        res.redirect("/dash/home");
+    } catch (error) {
+        res.status(500).send({error: true, data: error.message});
+    }
 })
 
 /*
