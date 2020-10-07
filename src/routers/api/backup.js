@@ -91,7 +91,7 @@ router.post("/api/backup", Auth.group, async (req, res) => {
                                     let name = source.split(":")[0];
                                     let args = source.split(":");
                                     args.splice(0, 1);
-                                    let sourceAction = require(`../backup/sources/${name}.js`)
+                                    let sourceAction = require(`../../backup/sources/${name}.js`)
                                     let sourceClass = new sourceAction[name](args);
                                     sourceClass.read(archive);
                                     send("backup", `${backupIdentifier} > (${index + 1} / ${array.length}) Piped source: ${name}`)
