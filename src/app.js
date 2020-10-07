@@ -81,13 +81,20 @@ waterfall([
         if (config.options.http == true) {
             Log.send("system", "HTTP IS ENABLED, THIS IS INSECURE PLEASE USE HTTPS", {colour: "FgYellow"})
         }
-        Web.start(config)
-            .then(httpServer => {
+        const connections = new Set();    //Track active connections
+        Web.start(config, connections)
+            .then((handles) => {
 
                 //Handle exits
                 Exit.handle(() => {
                     Log.send("system", "Closing..");
-                    httpServer.close();
+                    //Terminate active connections
+                    for (const connection of connections) { 
+                        connection.emit("Shutdown", "Server is closing")
+                        connection.disconnect(true) 
+                    }
+                    handles.io.close();
+                    handles.http.close();
                     mongoose.connection.close();
                 })
 

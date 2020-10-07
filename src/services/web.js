@@ -10,9 +10,10 @@ const path = require("path");
 const fs = require("fs");
 
 const Log = require("../utils/log");
+const Socket = require("./sockets/socket.js");
 
 //Start webserver
-const start = (config) => {
+const start = (config, connections) => {
     return new Promise((resolve, reject) => {
         try {
             //Configure express
@@ -72,19 +73,22 @@ const start = (config) => {
                                 const httpServer = http.createServer(app);
                                 const io = require("socket.io")(httpServer);
 
-                                //404
-                                app.get("*", (req, res) => {
-                                    res.render("404.hbs")
-                                })
+                                //Handle socket connections and events
+                                Socket.handler(io, {connections})
+                                    .then(() => {
+                                        //404
+                                        app.get("*", (req, res) => {
+                                            res.render("404.hbs");
+                                        })
 
-                                httpServer.on("error", error => {
-                                    reject(error.message)
-                                });
-                                httpServer.listen(config.web.port, () => {
-                                    Log.send("system", "Webserver started", {colour: "FgGreen"});
-                                    resolve(httpServer);
-                                });
-
+                                        httpServer.on("error", error => {
+                                            reject(error.message);
+                                        });
+                                        httpServer.listen(config.web.port, () => {
+                                            Log.send("system", "Webserver started", {colour: "FgGreen"});
+                                            resolve({http: httpServer, io});
+                                        });
+                                    }).catch(error => reject(error))
                             } catch (error) {
                                 reject(error.message)
                             }

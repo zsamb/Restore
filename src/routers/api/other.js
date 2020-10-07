@@ -23,4 +23,11 @@ router.get("/api/resources", Auth.user, async (req, res) => {
     }
 })
 
+/*
+SOCKET TEST
+*/
+router.get("/socket/test", (req, res) => {
+    res.render("test.hbs")
+})
+
 module.exports = router;

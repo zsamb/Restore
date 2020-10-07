@@ -1,17 +1,26 @@
 <html>
     <h1>Test</h1>
+    <button onclick="socketTest()">Socket test</button>
+    <script src="/socket.io/socket.io.js"></script>
     <script>
-        fetch("/user/login", {
-            method: "POST", 
-            body: JSON.stringify({username: "admin", password: "password"}),
-            headers: {
-                'Content-Type': 'application/json;charset=utf-8'
-            },
-        }).then(res => {
-            res.json()
-            .then((body) => {
-                console.log(body);
-            })
-        }).catch(err => console.log(err))
+        let socket = io();
+        const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZjZhNWRmNWRhODAzZTE5ZDIzNzYzNDciLCJpYXQiOjE2MDE3NjQwNDR9.1ZaMUD9K629Ic6zOQ4HBWMMk67DKAXI5CMlKLepEaqA"
+        socket.on("Error", error => {
+            console.log("Error: " + error)
+        })
+        socket.on("Update", update => {
+            console.log("Update: " + update)
+        })
+        socket.on("Shutdown", message => {
+            console.log(message)
+        })
+        const socketTest = () => {
+            socket.emit("create_backup", {
+                auth: token,
+                body: {
+
+                }
+            });
+        }
     </script>
 </html>
