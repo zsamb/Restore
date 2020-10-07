@@ -33,8 +33,8 @@ const handler = (io, options) => {
                             socket.on(eventName, body => {
                                 parse(body)
                                     .then(data => {
-                                        eventFunction(socket, body);
-                                    }).catch(error => socket.emit("Error", error))
+                                        eventFunction(socket, data);
+                                    }).catch(error => socket.emit("Error", { req: "handler", msg: error }))
                             })
                         }
                     })
@@ -62,7 +62,7 @@ const parse = (data) => {
                         const group = await Group.findOne({name: user.group});
                         data.group = group;
                         //Check if body
-                        if (typeof data.body == "object") {
+                        if (typeof data.body === "object") {
                             resolve(data);
                         } else { reject("Invalid body")}
                     } else { reject("Invalid authentication") }
