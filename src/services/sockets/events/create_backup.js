@@ -130,5 +130,5 @@ module.exports = (socket, data) => {
                 send("backup", `Backup creation error: ${error.message}`, {error: true});
             })
 
-    } else { socket.emit("Error", "You have invalid permissions") }
+    } else { socket.emit("Error", { req: "create_backup", msg: "You have invalid permissions" }) }
 }
