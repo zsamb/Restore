@@ -115,7 +115,7 @@ module.exports = (socket, data) => {
                             locationCount: data.body.targets.length,
                             id: backupRecord.id
                         }})
-                        send("backup", `${backupIdentifier} Complete! (Backup size: ${backupSize}) (Collective size: ${convert(collectiveSize * data.body.targets.length)}) Backed to ${data.body.targets.length > 1 ? `${data.body.targets.length} locations!` : `${req.body.targets.length} location!`}`)
+                        send("backup", `${backupIdentifier} Complete! (Backup size: ${backupSize}) (Collective size: ${convert(collectiveSize * data.body.targets.length)}) Backed to ${data.body.targets.length > 1 ? `${data.body.targets.length} locations!` : `${data.body.targets.length} location!`}`)
                     })
                     .catch(async error => {
                         //Catch errors when document is written
