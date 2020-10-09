@@ -1,6 +1,4 @@
 //Delete backup socket event
-const archiver = require('archiver');
-
 const {send} = require("../../../utils/log");
 const Backup = require("../../../db/models/backup");
 const { parse }  = require("../../../backup/parse");
