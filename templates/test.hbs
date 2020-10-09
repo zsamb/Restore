@@ -1,26 +1,53 @@
 <html>
+
+
     <h1>Test</h1>
-    <button onclick="socketTest()">Socket test</button>
+    <button onclick="createBackup()">Create backup</button>
+    <button onclick="deleteBackup()">Delete backup</button>
+    <button onclick="restoreBackup()">Restore backup</button>
     <script src="/socket.io/socket.io.js"></script>
+    
     <script>
         let socket = io();
         const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZjZhNWRmNWRhODAzZTE5ZDIzNzYzNDciLCJpYXQiOjE2MDE3NjQwNDR9.1ZaMUD9K629Ic6zOQ4HBWMMk67DKAXI5CMlKLepEaqA"
         socket.on("Error", error => {
-            console.log("Error: " + error)
+            console.log("Error: " + JSON.stringify(error, null, 2))
         })
         socket.on("Update", update => {
-            console.log("Update: " + update)
+            console.log("Update: " + JSON.stringify(update, null, 2))
         })
         socket.on("Shutdown", message => {
-            console.log(message)
+            console.log(JSON.stringify(message, null, 2))
         })
-        const socketTest = () => {
+        const createBackup = () => {
             socket.emit("create_backup", {
                 auth: token,
                 body: {
-
+                    sources: ["file:/root/Testing/sources/test.py", "folder:/root/Testing/sources/pics"],
+                    targets: ["local:/root/Testing/targets/target1.zip", "local:/root/Testing/targets/target2.zip"],
+                    alias: "Socket test"
                 }
             });
+        }
+        const deleteBackup = () => {
+            socket.emit("delete_backup", {
+                auth: token,
+                body: {
+                    id: "5f805a9841f50ccdb8b980a5",
+                    removeFiles: true
+                }
+            });
+        }
+        const restoreBackup = () => {
+            socket.emit("restore_backup", {
+                auth: token,
+                body: {
+                    id: "5f805a9841f50ccdb8b980a5",
+                    target: 0,
+                    restoreTarget: "local:/root/Testing/restores",
+                    extract: true
+                }
+            })
         }
     </script>
 </html>
