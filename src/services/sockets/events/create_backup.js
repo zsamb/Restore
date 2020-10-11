@@ -100,7 +100,6 @@ module.exports = (socket, data) => {
 
                                 //Update progress and heap
                                 archive.on("progress", data => {
-                                    sourceSize = data.fs.totalBytes;
                                     progress = data.fs.processedBytes;
                                     heap = process.memoryUsage().heapUsed;
                                     memoryUsage.push(process.memoryUsage().heapUsed);
@@ -137,6 +136,7 @@ module.exports = (socket, data) => {
                                     send("backup", `${backupIdentifier} > (${index + 1} / ${array.length}) Calculating source size..`)
 
                                     sourceClass.getSize();
+                                    sourceSize += sourceClass.size;
                                     sourceStats.push({
                                         type: name,
                                         size: convert(sourceClass.size)
