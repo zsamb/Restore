@@ -1,10 +1,33 @@
 <html>
+    <style>
+        #myProgress {
+            width: 100%;
+            background-color: #ddd;
+        }
 
+        #myBar {
+            width: 0%;
+            height: 30px;
+            background-color: #4CAF50;
+            text-align: center;
+            line-height: 30px;
+            color: white;
+        }
+    </style>
 
     <h1>Test</h1>
     <button onclick="createBackup()">Create backup</button>
     <button onclick="deleteBackup()">Delete backup</button>
     <button onclick="restoreBackup()">Restore backup</button>
+
+    <h1>Backup POC Progress Bar</h1>
+
+    <div id="myProgress">
+    <div id="myBar">0%</div>
+    </div>
+
+    <p id="completeData">Data</p>
+
     <script src="/socket.io/socket.io.js"></script>
     
     <script>
@@ -15,6 +38,29 @@
         })
         socket.on("Update", update => {
             console.log("Update: " + JSON.stringify(update, null, 2))
+            if (update.progress) {
+                var elem = document.getElementById("myBar");
+                elem.style.width = update.progress.percent;
+                elem.innerHTML = update.progress.percent;
+            }
+
+            if (update.complete && update.req == "create_backup") {
+
+                var elem = document.getElementById("myBar");
+                elem.style.width = "100%";
+                elem.innerHTML = "100%";
+
+                var completePara = document.getElementById("completeData");
+                completePara.innerHTML = JSON.stringify(update, null, 2)
+
+                socket.emit("delete_backup", {
+                    auth: token,
+                    body: {
+                        id: update.stats.id,
+                        removeFiles: true
+                    }
+                })
+            }
         })
         socket.on("Shutdown", message => {
             console.log(JSON.stringify(message, null, 2))
@@ -23,9 +69,11 @@
             socket.emit("create_backup", {
                 auth: token,
                 body: {
-                    sources: ["file:/root/Testing/sources/test.py", "folder:/root/Testing/sources/pics"],
-                    targets: ["local:/root/Testing/targets/target1.zip", "local:/root/Testing/targets/target2.zip"],
-                    alias: "Socket test"
+                    //sources: ["file:/root/Testing/sources/test.py", "folder:/root/Testing/sources/pics"],
+                    sources: ["folder:/root/Restore"],
+                    //targets: ["local:/root/Testing/targets/target1.zip", "local:/root/Testing/targets/target2.zip"],
+                    targets: ["local:/root/restore2.zip"],
+                    alias: "Large test"
                 }
             });
         }
@@ -33,7 +81,7 @@
             socket.emit("delete_backup", {
                 auth: token,
                 body: {
-                    id: "5f805a9841f50ccdb8b980a5",
+                    id: "5f807d1d263350d3292bb0e9",
                     removeFiles: true
                 }
             });

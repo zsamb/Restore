@@ -3,6 +3,7 @@
     Creates readable stream of local folder
 */
 const fs = require("fs");
+const path = require("path");
 
 const requirements = [
     {location: "Location of the folder on the system"}
@@ -46,6 +47,43 @@ class folder {
             }
         } else {
             throw new Error(`Source path is invalid: ${this.location ? this.location : "undefined"}`)
+        }
+    }
+
+    getSize() {
+        try {
+
+            let totalSize = 0;
+
+            const getAllFiles = function(dirPath, arrayOfFiles) {
+                let files = fs.readdirSync(dirPath)
+                arrayOfFiles = arrayOfFiles || []
+                files.forEach(function(file) {
+                    let stats = fs.statSync(dirPath + "/" + file)
+                    if (stats.isDirectory()) {
+                        totalSize += stats.size;
+                        arrayOfFiles = getAllFiles(dirPath + "/" + file, arrayOfFiles)
+                    } else {
+                        arrayOfFiles.push(path.join(dirPath, file))
+                    }
+                })
+                return arrayOfFiles
+            }  
+
+            const getTotalSize = function(directoryPath) {
+                const arrayOfFiles = getAllFiles(directoryPath)
+                let thisTotalSize = 0
+                arrayOfFiles.forEach(function(filePath) {
+                    thisTotalSize += fs.statSync(filePath).size
+                })
+                return thisTotalSize;
+            }
+
+            this.size = getTotalSize(this.location) + totalSize;
+        } catch (error) { 
+            if (error.code !== "ENOENT") {
+                throw new Error(`Failed to fetch source folder size: ${error.message}`)
+            }
         }
     }
 

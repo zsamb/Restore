@@ -55,6 +55,15 @@ class file {
         }
     }
 
+    getSize() {
+        try {  
+            let stats = fs.statSync(this.location);
+            this.size = stats.size;
+        } catch (error) { 
+            throw new Error(`Failed to fetch source file size: ${error.message}`)
+        }
+    }
+
     read(archive) {
         try {
             archive.file(this.location, {name: this.location.split("/")[this.location.split("/").length - 1]})
