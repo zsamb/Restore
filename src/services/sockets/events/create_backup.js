@@ -71,12 +71,9 @@ module.exports = (socket, data) => {
                                 let output = targetClass.createStream();
 
                                 archive.on("warning", (error) => {
-                                    if (error.code !== "ENOENT") {
-                                        reject(error.message)
-                                    }
+                                    reject(error.message)
                                 });
                                 archive.on("error", (error) => {
-                                    console.log(error)
                                     reject(error.message)
                                 });
 

@@ -59,7 +59,7 @@ class folder {
                 let files = fs.readdirSync(dirPath)
                 arrayOfFiles = arrayOfFiles || []
                 files.forEach(function(file) {
-                    let stats = fs.statSync(dirPath + "/" + file)
+                    let stats = fs.lstatSync(dirPath + "/" + file)
                     if (stats.isDirectory()) {
                         totalSize += stats.size;
                         arrayOfFiles = getAllFiles(dirPath + "/" + file, arrayOfFiles)
@@ -73,6 +73,7 @@ class folder {
             const getTotalSize = function(directoryPath) {
                 const arrayOfFiles = getAllFiles(directoryPath)
                 let thisTotalSize = 0
+                
                 arrayOfFiles.forEach(function(filePath) {
                     thisTotalSize += fs.statSync(filePath).size
                 })
@@ -81,19 +82,63 @@ class folder {
 
             this.size = getTotalSize(this.location) + totalSize;
         } catch (error) { 
-            if (error.code !== "ENOENT") {
-                throw new Error(`Failed to fetch source folder size: ${error.message}`)
-            }
+            throw new Error(`Failed to fetch source folder size: ${error.message}`)
         }
     }
 
     read(archive) {
         try {
             if (this.location[this.location.length - 1] == "/") {
-                this.location[this.location.length - 1] = ""
+                this.location[this.location.length - 1] = "";
             }
             let destDir = this.location.split("/")[this.location.split("/").length - 1];
-            archive.directory(this.location, destDir);
+            //Loop through a directory, recursively, and append to the archiver
+            const fetchFilesFromDir = (archive, dirPath, arrayFiles) => {  
+                let files = fs.readdirSync(dirPath)
+                arrayFiles = arrayFiles || []
+                files.forEach(file => {
+                    let fileStats = fs.lstatSync(`${dirPath}/${file}`)      
+                    if (fileStats.isDirectory()) {
+                        //Repeat if dir
+                        arrayFiles = fetchFilesFromDir(archive, `${dirPath}/${file}`, arrayFiles)   
+                    } else {
+                        //Check if symbolic link
+                        if (fileStats.isSymbolicLink()) {
+                            arrayFiles.push(`${dirPath}/${file}`)
+                            let filePath = `${dirPath}/${file}`;
+                            let internalPath =  filePath.substring(filePath.indexOf(destDir));
+                            try {
+                                archive.append(Buffer.from(fs.readlinkSync(`${dirPath}/${file}`)), { 
+                                    name: internalPath, 
+                                    stats: fileStats 
+                                })
+                            } catch (error) {
+                                if (error.code == "ENOENT" || error.code == "ENXIO") {
+                                    console.log(`${error.code} Skipping symlink: ${file}`)
+                                } else { throw new Error(error.message) }
+                            }
+                        } else {
+                            //Append to archiver
+                            arrayFiles.push(`${dirPath}/${file}`)
+                            let filePath = `${dirPath}/${file}`;
+                            let internalPath =  filePath.substring(filePath.indexOf(destDir));
+                            try {
+                                archive.append(Buffer.from(fs.readFileSync(`${dirPath}/${file}`)), { 
+                                    name: internalPath, 
+                                    stats: fileStats 
+                                })
+                            } catch (error) {
+                                if (error.code == "ENOENT" || error.code == "ENXIO") {
+                                    console.log(`${error.code} Skipping: ${file}`)
+                                } else { throw new Error(error.message) }
+                            }
+                        }
+                    }
+                })
+                return arrayFiles;
+            }
+
+            fetchFilesFromDir(archive, this.location)
         } catch (error) {
             throw new Error(`Failed to compress source folder: ${error.message}`)
         }
