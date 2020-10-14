@@ -1,4 +1,6 @@
-//Socket handler
+/**
+ * @module Socket
+ */
 const fs = require("fs");
 const path = require("path");
 const jwt = require('jsonwebtoken');
@@ -9,7 +11,12 @@ const User = require("../../db/models/user");
 const Group = require("../../db/models/group");
 const { connections } = require("mongoose");
 
-//Handle new socket connections
+/**
+ * Handles new socket connections
+ * @param {SocketIO.Server} io Socket.io server instance
+ * @param {Object} options Handler options
+ * @param {Set} options.connections The active connection tracking set
+ */
 const handler = (io, options) => {
     return new Promise(async (resolve, reject) => {
         try {
@@ -46,7 +53,11 @@ const handler = (io, options) => {
     })
 }
 
-//Parse event payload
+/**
+ * Parses, validates and authenticates websocket event data
+ * @param {Object} data Data from websocket event
+ * @returns {Object} Returns parsed data with user and user group attached
+ */
 const parse = (data) => {
     return new Promise(async (resolve, reject) => {
         if (typeof data === "object") {

@@ -1,9 +1,6 @@
-/*
-    Authentication middleware
-
-    Middleware to authenticate user tokens or group permissions to allow/deny access to endpoints
-*/
-
+/**
+ * @module Middleware
+ */
 const jwt = require('jsonwebtoken');
 const fs = require("fs");
 const moment = require("moment");
@@ -13,7 +10,11 @@ const User = require("../db/models/user");
 const Group = require("../db/models/group");
 const Config = require("../../config.json");
 
-//Access logging
+/**
+ * Creates an access log to file and console
+ * @param {Object} request Incoming request data
+ * @param {Boolean} auth Is request authenticated
+ */
 const createLog = (request, auth) => {
     return new Promise((resolve, reject) => {
         const fileTimestamp = moment().format("YYYY-MM-DD").concat(".log");
@@ -42,7 +43,9 @@ const createLog = (request, auth) => {
     })
 }
 
-//Log no-auth requests
+/**
+ * Creates an access log to file and console for no-auth endpoints
+ */
 const none = (req, res, next) => {
     const fileTimestamp = moment().format("YYYY-MM-DD").concat(".log");
     const objectTimestamp = moment().format("x");
@@ -70,8 +73,9 @@ const none = (req, res, next) => {
         })
 }
 
-//Authenticates a web token and attaches the verified user to the request object
-//Requests that require token auth should have the token as the Authorization header
+/**
+ * Authenticates request via web token and attaches user data to request 
+ */
 const user = async (req, res, next) => {
     try {
         //Authenticate
@@ -94,6 +98,9 @@ const user = async (req, res, next) => {
     }
 }
 
+/**
+ * Authenticates request via web token from request cookies and attaches user data to request 
+ */
 const cookie = async (req, res, next) => {
     try {
         //Get token from cookie
@@ -120,7 +127,9 @@ const cookie = async (req, res, next) => {
     }
 }
 
-//Gets a users group from authentication token and attach it to request
+/**
+ * Fetches user group from webtoken and attaches it to request
+ */
 const group = async (req, res, next) => {
     try {
         const token = req.header('Authorization').replace('Bearer ', '');

@@ -1,6 +1,6 @@
-/*
-    Begins webserver and configures express
-*/
+/**
+ * @module Web
+ */
 const express = require("express");
 const moment = require("moment");
 const app = express();
@@ -12,7 +12,11 @@ const fs = require("fs");
 const Log = require("../utils/log");
 const Socket = require("./sockets/socket.js");
 
-//Start webserver
+/**
+ * Starts the web server
+ * @param {Object} config The restore config
+ * @param {Set} connections The active connection tracking set
+*/
 const start = (config, connections) => {
     return new Promise((resolve, reject) => {
         try {
@@ -37,6 +41,8 @@ const start = (config, connections) => {
             app.set("view engine", "hbs");
             app.set("views", path.join(__dirname, "../../templates"));
             app.use(cookieParser());
+            app.use('/jsdoc', express.static('out'))
+
             //Register routers
             Log.send("system", "Registering routers..");
             fs.promises.readdir(path.join(__dirname, "../routers"))

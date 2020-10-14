@@ -1,10 +1,17 @@
 /*
     Fetches all of the specified type actions, reads their requirements to provide a useful interface when creating a backup
 */
+/**
+ * @module backupParser
+ */
 const fs = require("fs");
 const path = require("path");
 
-//Parse function (type: "sources", "targets")
+/**
+ * Fetches all backup actions of specified type
+ * @param {('sources'|'targets'|'restores')} urlType Action type
+ * @returns {Object} Returns an object of backup actions
+ */
 const parse = (urlType) => {
     return new Promise((resolve, reject) => {
 
@@ -29,7 +36,11 @@ const parse = (urlType) => {
     })
 }
 
-//Synchronous parse function
+/**
+ * Fetches all backup actions of specified type synchonously
+ * @param {('sources'|'targets'|'restores')} urlType Action type
+ * @returns {Object} Returns an object of backup actions
+ */
 const parseSync = (urlType) => {
     if (urlType == "sources" || urlType == "targets") {
         //Get all actions of the type
@@ -49,7 +60,12 @@ const parseSync = (urlType) => {
     }
 }
 
-//Validates urls against ones that exist, checking their requirements ect
+/**
+ * Validates passed backup URLS against passed backup actions
+ * @param {Array.<String>} urls Backup urls
+ * @param {Object} actions Backup actions
+ * @returns Resolves if successful
+ */
 const validateUrls = (urls, actions) => {
     return new Promise((resolve, reject) => {
         if (urls instanceof Array) {
@@ -90,7 +106,12 @@ const validateUrls = (urls, actions) => {
     })
 }
 
-//Synchronous validate urls function
+/**
+ * Validates passed backup URLS against passed backup actions synchronously
+ * @param {Array.<String>} urls Backup urls
+ * @param {Object} actions Backup actions
+ * @returns Throws error if validation fails
+ */
 const validateUrlsSync = (urls, actions) => {
     if (urls instanceof Array) {
         urls.forEach(url => {

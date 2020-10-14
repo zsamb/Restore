@@ -1,11 +1,13 @@
-/*
-Logging helper
-
-Handles logging to terminal and file with additional options
-*/
+/**
+ * @module Log
+ */
 const Path = require("path");
 const fs = require("fs");
 const moment = require("moment");
+
+/**
+ * @typedef {'FgBlack'|'FgRed'|'FgGreen'|'FgYellow'|'FgBlue'|'FgMagenta'|'FgCyan'|'FgWhite'|'BgBlack'|'BgRed'|'BgGreen'|'BgYellow'|'BgBlue'|'BgMagenta'|'BgCyan'|'BgWhite'} Colours
+ */
 
 const colours = {
 
@@ -28,9 +30,15 @@ const colours = {
 
 }
 
-/*
-    Log creation
-    Parameters: type, message and options object {fileOnly:bool, consoleOnly:bool, error:bool, colour:key}
+/**
+ * Creates a log message
+ * @param {('system'|'backup')} type The log message type
+ * @param {String} message The message to log
+ * @param {Object} options Log message options
+ * @param {Boolean} options.fileOnly Only log message to file
+ * @param {Boolean} options.consoleOnly Only log message to console
+ * @param {Colours} options.colour Colour to log the message in
+ * @param {Boolean} options.error Message is an error
 */
 const send = (type, message, options) => {
     return new Promise((resolve, reject) => {
@@ -75,7 +83,16 @@ const send = (type, message, options) => {
     })
 }
 
-//Log creation for multiple messages (same parameters as send)
+/**
+ * Creates multiple log messages
+ * @param {('system'|'backup')} type The log message type
+ * @param {Array.<String>} messages The message to log
+ * @param {Object} options Log message options
+ * @param {Boolean} options.fileOnly Only log message to file
+ * @param {Boolean} options.consoleOnly Only log message to console
+ * @param {Colours} options.colour Colour to log the message in
+ * @param {Boolean} options.error Message is an error
+*/
 const sendMultiple = (type, messages, options) => {
     return new Promise((resolve, reject) => {
 

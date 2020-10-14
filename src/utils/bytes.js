@@ -1,13 +1,23 @@
-/*
-Bytes helper
+/**
+ * @module Bytes
+ */
 
-Converts bytes into a easier to understand type
+/**
+ * Rounds a value to the given precison
+ * @param {Number} value The number to round
+ * @param {Number} precision Decimal point precision
+ * @returns {Number} Returns the rounded value round
 */
 const round = (value, precision) => {
     let multiplier = Math.pow(10, precision || 0);
     return Math.round(value * multiplier) / multiplier;
 }
 
+/**
+ * Converts bytes into their smallest scale
+ * @param {Number} bytes Bytes to convert
+ * @returns {String} Returns the converted value
+ */
 const convert = (bytes) => {
     let tb = Math.round(bytes / 1e+12);
     let gb = Math.round(bytes / 1e+9);
