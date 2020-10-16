@@ -63,7 +63,7 @@ const setupWebhook = (url, avatar, username) => {
         })
 
 
-        sendData(url, postData).then(resolve(postData)).catch((e) => reject(e))
+        sendData(url, "PATCH", postData).then(resolve(postData)).catch((e) => reject(e))
 
     })
 }
