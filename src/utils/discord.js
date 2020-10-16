@@ -1,3 +1,7 @@
+/**
+ * @module DiscordWebhook
+ */
+
 const https = require("https");
 
 const acceptedStatusCodes = [200, 201, 202, 204]
@@ -78,7 +82,7 @@ const colours = {
 /**
  * Handles setting up the embed for webhook.
  * @function createEmbed
- * @param {'error'|'success'|'warning'|'info'} type - Embed type, handles the colour of embed. @see Colours
+ * @param {'error'|'success'|'warning'|'info'} type - Embed type, handles the colour of embed. {@link Colours}
  * @param {*} title - Embed title
  * @param {*} desc - Embed description
  * @param {*} fields - Embed Fields
@@ -155,3 +159,9 @@ const createEmbed = (type, title, desc, fields, footer) => {
         resolve(embedTemplate);
     });
 };
+
+modules.export = {
+    sendData,
+    createEmbed,
+    setupWebhook
+}
