@@ -5,7 +5,7 @@ const contenttype = "application/json"
 
 /**
  * Handles sending data about the webhook to discord server
- * @function
+ * @function sendData
  * @param {string} url - Discord Webhook url (with token and id)
  * @param {string} method - HTTP Method e.g GET, POST, PATCH
  * @param {object} options - Check out {@link https://discord.com/developers/docs/resources/webhook#execute-webhook-jsonform-params|Discord Docs}
@@ -44,6 +44,7 @@ const sendData = (url, method, options) => {
 
 /**
  * Handles setting up the avatar and username.
+ * @function setupWebhook
  * @param {string} url - Discord webhook url (with token and id)
  * @param {string} avatar - Data image of avatar
  * @param {string} username - Webhook username
@@ -76,6 +77,7 @@ const colours = {
 
 /**
  * Handles setting up the embed for webhook.
+ * @function createEmbed
  * @param {'error'|'success'|'warning'|'info'} type - Embed type, handles the colour of embed. @see Colours
  * @param {*} title - Embed title
  * @param {*} desc - Embed description
