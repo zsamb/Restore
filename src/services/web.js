@@ -41,7 +41,6 @@ const start = (config, connections) => {
             app.set("view engine", "hbs");
             app.set("views", path.join(__dirname, "../../templates"));
             app.use(cookieParser());
-            app.use('/jsdoc', express.static('out'))
 
             //Register routers
             Log.send("system", "Registering routers..");

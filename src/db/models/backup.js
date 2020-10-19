@@ -27,8 +27,6 @@ const backupSchema = new mongoose.Schema({
         type: [String],
         required: [true, "A backup target is required"],
         validate(targets) {
-            //Limit to one target (v1)
-            //if (targets.length != 1) { throw new Error("You have too many/little targets") }
             if (targets.length < 1 || targets.length > Config.options.maximumTargets) {
                 throw new Error("You have too many/little targets")
             }

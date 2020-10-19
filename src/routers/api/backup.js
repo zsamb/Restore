@@ -8,6 +8,7 @@ const archiver = require('archiver');
 const router = new express.Router();
 const fs = require("fs");
 
+const Discord = require("../../utils/discord");
 const Auth = require("../../middleware/auth");
 const Backup = require("../../db/models/backup");
 const {parse, validateUrls} = require("../../backup/parse");
@@ -112,8 +113,13 @@ router.post("/api/backup", Auth.group, async (req, res) => {
 
                         await backup.save();
 
+                        await Discord.setupWebhook("https://discordapp.com/api/webhooks/766732942890237982/AK-_livujeIHiZte95UmTb5xMymHXuh4TpzY-5fblgB83yHLTbtmcOVAJHX--wweYZ9S", datauri, "Restore")
+                        let embed = await Discord.createEmbed("success", "Backup Created", "Full backup of system was created successfully!", null, "Restore")
+                        await Discord.sendData("https://discordapp.com/api/webhooks/766732942890237982/AK-_livujeIHiZte95UmTb5xMymHXuh4TpzY-5fblgB83yHLTbtmcOVAJHX--wweYZ9S", "POST", {embeds:[embed]})
+
                         res.status(201).send({tookMs: creationTookMs, backup});
                         send("backup", `${backupIdentifier} Complete! (Backup size: ${backupSize}) (Collective size: ${convert(collectiveSize * req.body.targets.length)}) Backed to ${req.body.targets.length > 1 ? `${req.body.targets.length} locations!` : `${req.body.targets.length} location!`}`)
+
                     })
                     .catch(async error => {
                         //Catch errors when document is written

@@ -4,6 +4,7 @@ Misc Endpoints
 const express = require('express');
 const router = new express.Router();
 
+const User = require("../../db/models/user")
 const Auth = require("../../middleware/auth");
 const Resources = require("../../utils/resources");
 const Config = require("../../../config.json");
@@ -22,6 +23,18 @@ router.get("/api/resources", Auth.user, async (req, res) => {
     } catch (error) {
         res.status(400).send({error: true, data: error.message})
     }
+})
+
+//Performance tester
+router.get("/api/performance", Auth.user, async (req, res) => {
+    const creationStart = process.hrtime();
+    try {
+        //Test mongodb
+        for (let i = 0; i < 10; i++) {
+
+        }
+
+    } catch (error) { res.status(500).send({error: true, data: error.message}) }
 })
 
 /*

@@ -59,7 +59,7 @@
                         id: update.stats.id,
                         removeFiles: true
                     }
-                })
+                });
             }
         })
         socket.on("Shutdown", message => {
@@ -72,7 +72,7 @@
                     //sources: ["file:/root/Testing/sources/test.py", "folder:/root/Testing/sources/pics"],
                     sources: ["folder:/root/Restore"],
                     //targets: ["local:/root/Testing/targets/target1.zip", "local:/root/Testing/targets/target2.zip"],
-                    targets: ["local:/root/restore2.zip"],
+                    targets: ["local:/root/Testing/targets/restore2.zip"],
                     alias: "Large test"
                 }
             });

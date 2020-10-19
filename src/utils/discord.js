@@ -3,6 +3,7 @@
  */
 
 const https = require("https");
+const fs = require("fs");
 
 const acceptedStatusCodes = [200, 201, 202, 204]
 const contenttype = "application/json"
@@ -54,7 +55,7 @@ const sendData = (url, method, options) => {
  * @param {string} username - Webhook username
  */
 
-const setupWebhook = (url, avatar, username) => {
+const setupWebhook = (url, username) => {
     return new Promise((resolve, reject) => {
 
         let postData = querystring.stringify({
@@ -160,7 +161,7 @@ const createEmbed = (type, title, desc, fields, footer) => {
     });
 };
 
-modules.export = {
+module.exports = {
     sendData,
     createEmbed,
     setupWebhook
