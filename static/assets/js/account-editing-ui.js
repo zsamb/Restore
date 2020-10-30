@@ -85,6 +85,7 @@ class AccountEditPopup {
         }, false)
         this.cancel_button = new PopupButton('Cancel', 'account-edit-cancel-button', 1, function() {
           popup_obj.popup.close()
+          page_overlay.hide()
         })
         this.popup.bottom_buttons = [this.save_button, this.cancel_button];
 
