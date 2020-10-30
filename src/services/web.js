@@ -33,7 +33,7 @@ const start = (config, connections) => {
             }
             //Load assets and engines
             Log.send("system", "Loading assets..");
-            app.use("/assets", express.static("public/assets"));
+            app.use("/assets", express.static("static/assets"));
             app.set("view engine", "hbs");
             app.set("views", path.join(__dirname, "../../templates"));
             app.use(cookieParser());
