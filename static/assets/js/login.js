@@ -15,7 +15,7 @@ $(document).ready(function() {
       res.json()
       .then((body) => {
         if (body['error']) {
-          if (body[data].includes("No matching document found for id")) {
+          if (body['data'].includes("No matching document found for id")) {
             console.log("Server Error")
           }
           switch (body['data']) {
